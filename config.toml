@@ -1,8 +1,6 @@
 baseURL = 'https://maquren.top'
-languageCode = 'zh-cn'
+defaultContentLanguage = 'zh'
+languageCode = 'zh-Hans'
 title = '码趣人的博客'
 theme = "dream"
 
-[server]
-bind = "0.0.0.0"  # 直接顶格写，不要缩进
-port = 1313       # 显式指定端口（即使默认是1313）
