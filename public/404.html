@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-cn"
+<html lang="zh-Hans"
   x-data
   :class="$store.darkMode.class()"
   :data-theme="$store.darkMode.theme()">
@@ -14,8 +14,8 @@
 
 
 
-<meta name="author" content="" />
-<meta name="description" content="" />
+<meta name="author" content="maquren" />
+<meta name="description" content="有趣的工程师，热爱编码，记录数码&技术,记录学习，成长～" />
 
 
 
@@ -25,7 +25,8 @@
 <meta property="og:url" content="http://localhost:1313/404.html">
   <meta property="og:site_name" content="码趣人的博客">
   <meta property="og:title" content="404 Page not found">
-  <meta property="og:locale" content="zh_cn">
+  <meta property="og:description" content="有趣的工程师，热爱编码，记录数码&amp;技术,记录学习，成长～">
+  <meta property="og:locale" content="zh_Hans">
   <meta property="og:type" content="website">
 
 
@@ -33,6 +34,7 @@
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="404 Page not found">
+  <meta name="twitter:description" content="有趣的工程师，热爱编码，记录数码&amp;技术,记录学习，成长～">
 
 
 
@@ -62,12 +64,23 @@
   <div class="container flex justify-between px-4">
   
     <section class="flex items-center gap-4">
-      <div class="avatar cursor-pointer hover:online" @click="flip = !flip" title="Flip it!">
+      <div class="avatar cursor-pointer hover:online" @click="flip = !flip" title="翻转一下！">
         <div class="h-10 rounded-full">
-          <img src="/" alt="" />
+          <img src="/img/personal/avatar.jpg" alt="maquren&#39;s Blog" />
         </div>
       </div>
 
+      
+      <div>
+        
+        <a href="http://localhost:1313/" class="text-lg font-semibold cursor-pointer">
+          maquren&#39;s Blog
+        </a>
+        
+        
+        <div class="text-base-content/60 text-sm">优秀是一种习惯，做最好的自己</div>
+        
+      </div>
       
     </section>
 
@@ -188,7 +201,7 @@
 <div class="h-[60vh] mx-auto px-4 flex flex-col justify-center items-center prose dark:prose-invert">
   <h1>Oops...You are lost in dream.</h1>
   <p>Don't worry though, click the button below to wake up.</p>
-  <button class="btn my-5" @click="window.location.href = 'http://localhost:1313/'">Back to home</button>
+  <button class="btn my-5" @click="window.location.href = 'http://localhost:1313/'">返回首页</button>
 </div>
 
 
@@ -201,13 +214,7 @@
   
 
   
-  <p class="text-sm">
-    🌱
-    <span class="text-base-content/60">
-      Powered by <a class="hover:underline" href="https://gohugo.io/" target="_blank">Hugo</a> with theme
-      <a class="hover:underline" href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</span
-    >
-  </p>
+  <p>有趣的工程师，热爱编码，记录数码&技术,记录学习，成长～</p>
   
 </div>
 
@@ -267,13 +274,7 @@
   
 
   
-  <p class="text-sm">
-    🌱
-    <span class="text-base-content/60">
-      Powered by <a class="hover:underline" href="https://gohugo.io/" target="_blank">Hugo</a> with theme
-      <a class="hover:underline" href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</span
-    >
-  </p>
+  <p>有趣的工程师，热爱编码，记录数码&技术,记录学习，成长～</p>
   
 </div>
 

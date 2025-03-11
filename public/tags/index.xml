@@ -5,7 +5,7 @@
     <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on 码趣人的博客</description>
     <generator>Hugo</generator>
-    <language>zh-cn</language>
+    <language>zh-Hans</language>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
