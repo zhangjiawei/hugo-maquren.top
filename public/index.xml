@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>码趣人的博客</title>
-    <link>http://localhost:1313/</link>
+    <link>http://localhost:41499/</link>
     <description>Recent content on 码趣人的博客</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:41499/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

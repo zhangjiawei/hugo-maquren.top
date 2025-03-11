@@ -7,8 +7,8 @@ theme = "dream"
 [params]
 # zenMode = true
  
-#lightTheme = "emerald"
-#darkTheme = "forest"
+lightTheme = "emerald"
+darkTheme = "forest"
  
 # backgroundImage = "img/global-background.jpg"
 # backgroundImageDark = ""
