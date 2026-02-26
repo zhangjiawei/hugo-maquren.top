@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>购买好域名后如何白嫖 Cloudflare：从注册到完整配置实战 | maquren · 技术与环境搭建</title>
+<meta name="keywords" content="Cloudflare, DNS, SSL, 免费建站, 域名配置">
+<meta name="description" content="手把手教你在购买好域名后，用 0 成本接入 Cloudflare，完成 DNS、SSL、CDN、邮箱等关键配置。">
+<meta name="author" content="map[email:zhangjiawei@maquren.top name:maquren]">
+<link rel="canonical" href="http://localhost:1313/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="maquren · 技术与环境搭建 (Alt + H)">maquren · 技术与环境搭建</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      购买好域名后如何白嫖 Cloudflare：从注册到完整配置实战
+    </h1>
+    <div class="post-description">
+      手把手教你在购买好域名后，用 0 成本接入 Cloudflare，完成 DNS、SSL、CDN、邮箱等关键配置。
+    </div>
+    <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="一前言为什么一定要用-cloudflare">一、前言：为什么一定要用 Cloudflare？<a hidden class="anchor" aria-hidden="true" href="#一前言为什么一定要用-cloudflare">#</a></h2>
+<p>大多数人买完域名，只停留在“能访问就行”。<br>
+但对开发工程师/内容创作者来说，更理想的状态是：</p>
+<ul>
+<li><strong>全站 HTTPS 加密</strong>，访问更安全、权重更友好；</li>
+<li>有一层 <strong>全球 CDN 加速和 DDoS 防护</strong>；</li>
+<li>可以方便地绑定各种服务（Pages、Workers、邮箱、对象存储等）；</li>
+<li>最好是 <strong>完全免费、不自己运维服务器</strong>。</li>
+</ul>
+<p>Cloudflare 的免费套餐正好满足这些需求。<br>
+这篇文章就是：<strong>从你已经买好域名开始，教你如何“白嫖” Cloudflare 的核心能力，并把域名配置完整。</strong></p>
+<blockquote>
+<p>本文示例以 <code>maquren.top</code> 为例，域名注册商以 NameSilo 为例，其他注册商（阿里云、腾讯云等）操作类似。</p>
+</blockquote>
+<hr>
+<h2 id="二前置条件你需要准备什么">二、前置条件：你需要准备什么<a hidden class="anchor" aria-hidden="true" href="#二前置条件你需要准备什么">#</a></h2>
+<p>开始之前，请确认你已经具备：</p>
+<ul>
+<li><strong>一个已购买的域名</strong>（例如：<code>maquren.top</code>），能登录到注册商后台（如 NameSilo）；</li>
+<li>一个 <strong>Cloudflare 账号</strong>，如果没有可以先免费注册；</li>
+<li>能访问 Cloudflare 控制台（<code>https://dash.cloudflare.com</code>）；</li>
+<li>对 DNS 解析有基础概念（知道 A 记录 / CNAME 的大致含义即可）。</li>
+</ul>
+<p>如果你还没有 Cloudflare 账号：</p>
+<ol>
+<li>打开 <code>https://dash.cloudflare.com</code>；</li>
+<li>使用邮箱注册一个免费账号（Free Plan 就够用）；</li>
+<li>登录后即可开始添加站点。</li>
+</ol>
+<hr>
+<h2 id="三第一步在-cloudflare-添加你的域名">三、第一步：在 Cloudflare 添加你的域名<a hidden class="anchor" aria-hidden="true" href="#三第一步在-cloudflare-添加你的域名">#</a></h2>
+<ol>
+<li>登录 Cloudflare 控制台；</li>
+<li>点击右上角的 <strong>“Add a site” / “添加站点”</strong>；</li>
+<li>输入你的域名（例如 <code>maquren.top</code>），注意不要带 <code>http://</code> 或子域名；</li>
+<li>选择套餐时，直接选 <strong>Free（免费版）</strong>；</li>
+<li>继续后，Cloudflare 会尝试扫描你当前的 DNS 记录：
+<ul>
+<li>如果是新域名，基本上没有什么记录；</li>
+<li>如果之前在别的地方已经有解析，可以先保留这些记录，后面再精简。</li>
+</ul>
+</li>
+</ol>
+<p><strong>建议：</strong></p>
+<ul>
+<li>不要一上来就删掉所有旧记录，先记下原解析情况再决定；</li>
+<li>对于完全新域名，可以暂时只保留几条必要记录（后面会讲）。</li>
+</ul>
+<hr>
+<h2 id="四第二步在注册商处更换-dnsnamesilo-为例">四、第二步：在注册商处更换 DNS（NameSilo 为例）<a hidden class="anchor" aria-hidden="true" href="#四第二步在注册商处更换-dnsnamesilo-为例">#</a></h2>
+<p>Cloudflare 要工作，需要成为你的域名的 <strong>权威 DNS</strong>。<br>
+这一步就是在注册商后台，把原来的 NS 记录改成 Cloudflare 提供的 NS。</p>
+<ol>
+<li>在 Cloudflare 完成“添加站点”步骤后，会看到类似这样的提示：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Please change your nameservers to:
+</span></span><span style="display:flex;"><span>  xxxx.ns.cloudflare.com
+</span></span><span style="display:flex;"><span>  yyyy.ns.cloudflare.com
+</span></span></code></pre></div><ol start="2">
+<li>登录 <strong>NameSilo</strong>（或你的域名注册商），找到你的 <code>maquren.top</code>：
+<ul>
+<li>一般在 “Domain Manager / 域名管理”；</li>
+</ul>
+</li>
+<li>找到 <strong>Nameservers / 域名服务器</strong> 设置；</li>
+<li>将原来的 NS 修改为 Cloudflare 给你的那两个：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>ns1: xxxx.ns.cloudflare.com
+</span></span><span style="display:flex;"><span>ns2: yyyy.ns.cloudflare.com
+</span></span></code></pre></div><ol start="5">
+<li>保存修改。</li>
+</ol>
+<blockquote>
+<p>注意：不同域名注册商界面不同，但关键词大多是 “Nameserver / DNS / 域名服务器”。</p>
+</blockquote>
+<p>修改完成后，需要等待 <strong>几分钟到 24 小时</strong> 的生效时间。<br>
+Cloudflare 控制台会自动检测，当看到状态变为 <strong>“Active”</strong> 或显示绿色对勾时，说明 NS 已经切换成功。</p>
+<hr>
+<h2 id="五第三步整理和配置-dns-解析">五、第三步：整理和配置 DNS 解析<a hidden class="anchor" aria-hidden="true" href="#五第三步整理和配置-dns-解析">#</a></h2>
+<p>接下来是在 Cloudflare 里配置你的 DNS 记录，这一步决定：</p>
+<ul>
+<li>域名解析到哪里；</li>
+<li>是否走 Cloudflare CDN / WAF；</li>
+<li>子域名如何划分。</li>
+</ul>
+<p>进入 Cloudflare → 选择你的域名 → 左侧点击 <strong>DNS</strong> → <strong>Records</strong>。</p>
+<h3 id="1-基本概念回顾">1. 基本概念回顾<a hidden class="anchor" aria-hidden="true" href="#1-基本概念回顾">#</a></h3>
+<ul>
+<li><strong>A 记录</strong>：指向一个 IPv4 地址（例如某台服务器）。</li>
+<li><strong>CNAME 记录</strong>：指向另一个域名，通常用来接到 Pages/其他 SaaS 服务。</li>
+<li>云朵图标：
+<ul>
+<li><strong>橙色</strong>：走 Cloudflare 代理（CDN/加速/防护）；</li>
+<li><strong>灰色</strong>：只做 DNS 解析，不走 Cloudflare。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-为根域名maqurentop配置解析">2. 为根域名（<code>maquren.top</code>）配置解析<a hidden class="anchor" aria-hidden="true" href="#2-为根域名maqurentop配置解析">#</a></h3>
+<p>根据你后续要用的服务不同，这里有几种常见情况。</p>
+<h4 id="场景-a暂时没有服务器只想先有一个占位页">场景 A：暂时没有服务器，只想先有一个占位页<a hidden class="anchor" aria-hidden="true" href="#场景-a暂时没有服务器只想先有一个占位页">#</a></h4>
+<p>可以先指向一个占位 IP（比如后面会用到的服务器），或者暂时留空，等你接入 Cloudflare Pages 再设置 CNAME。</p>
+<p><strong>推荐做法（配合 Cloudflare Pages）：</strong></p>
+<p>先暂时不配置根域名的 A 记录，只保留 Cloudflare 自动添加的默认记录。<br>
+当你在 Cloudflare Pages 中创建项目，并绑定自定义域时，Pages 会指导你添加一条 <strong>CNAME 记录</strong>，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>类型：CNAME
+</span></span><span style="display:flex;"><span>名称：maquren.top
+</span></span><span style="display:flex;"><span>目标：your-project-name.pages.dev
+</span></span><span style="display:flex;"><span>代理：橙色云朵（开启）
+</span></span></code></pre></div><blockquote>
+<p>这一部分可以在你真正创建完 Pages 项目后再回来补，不一定要第一时间完成。</p>
+</blockquote>
+<h4 id="场景-b有自己的服务器例如一台国内海外-vps">场景 B：有自己的服务器（例如一台国内/海外 VPS）<a hidden class="anchor" aria-hidden="true" href="#场景-b有自己的服务器例如一台国内海外-vps">#</a></h4>
+<p>你可以添加一条 A 记录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>类型：A
+</span></span><span style="display:flex;"><span>名称：@
+</span></span><span style="display:flex;"><span>IPv4：你的服务器 IP
+</span></span><span style="display:flex;"><span>代理：建议橙色云朵（隐藏真实 IP，享受 CDN）
+</span></span></code></pre></div><p>这里的 <code>@</code> 代表根域名 <code>maquren.top</code>。</p>
+<h3 id="3-为子域名如-wwwmaqurentop配置解析">3. 为子域名（如 <code>www.maquren.top</code>）配置解析<a hidden class="anchor" aria-hidden="true" href="#3-为子域名如-wwwmaqurentop配置解析">#</a></h3>
+<p>一般建议：</p>
+<ul>
+<li><code>www.maquren.top</code> → 指向根域名或 Pages；</li>
+</ul>
+<p>示例：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>类型：CNAME
+</span></span><span style="display:flex;"><span>名称：www
+</span></span><span style="display:flex;"><span>目标：maquren.top
+</span></span><span style="display:flex;"><span>代理：橙色云朵
+</span></span></code></pre></div><p>或者：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>类型：CNAME
+</span></span><span style="display:flex;"><span>名称：www
+</span></span><span style="display:flex;"><span>目标：your-project-name.pages.dev
+</span></span><span style="display:flex;"><span>代理：橙色云朵
+</span></span></code></pre></div><h3 id="4-检查多余记录">4. 检查多余记录<a hidden class="anchor" aria-hidden="true" href="#4-检查多余记录">#</a></h3>
+<p>Cloudflare 导入时可能会带入一些不必要的记录（例如原来免费邮箱、停车页等）：</p>
+<ul>
+<li>如果你确定不用，可以删除这些多余的 A/CNAME/MX 记录；</li>
+<li>保持 DNS 列表干净，有助于排错和维护。</li>
+</ul>
+<hr>
+<h2 id="六第四步配置-ssltls开启全站-https">六、第四步：配置 SSL/TLS，开启全站 HTTPS<a hidden class="anchor" aria-hidden="true" href="#六第四步配置-ssltls开启全站-https">#</a></h2>
+<p>在 Cloudflare 控制台 → 选择你的域名 → 左侧点击 <strong>SSL/TLS</strong>。</p>
+<h3 id="1-选择加密模式">1. 选择加密模式<a hidden class="anchor" aria-hidden="true" href="#1-选择加密模式">#</a></h3>
+<p>在 <strong>Overview / 概览</strong> 里有一个 “Encryption mode / 加密模式”：</p>
+<ul>
+<li>如果你的源站（比如 Pages、支持 HTTPS 的服务器）本身支持 HTTPS：
+<ul>
+<li>建议选择 <strong>Full</strong> 或 <strong>Full (strict)</strong>；</li>
+</ul>
+</li>
+<li>如果你暂时没有 HTTPS 源站，只是想给用户端到 Cloudflare 之间加密：
+<ul>
+<li>可以先用 <strong>Flexible</strong>（灵活），后面再升级。</li>
+</ul>
+</li>
+</ul>
+<p>对于使用 <strong>Cloudflare Pages</strong> 的场景，可以直接用 <strong>Full (strict)</strong>。</p>
+<h3 id="2-强制-http-自动跳转到-https">2. 强制 HTTP 自动跳转到 HTTPS<a hidden class="anchor" aria-hidden="true" href="#2-强制-http-自动跳转到-https">#</a></h3>
+<p>在 <strong>SSL/TLS → Edge Certificates</strong> 里：</p>
+<ul>
+<li>开启 <strong>“Always Use HTTPS”</strong>；</li>
+<li>可选：开启 <strong>“Automatic HTTPS Rewrites”</strong>；</li>
+</ul>
+<p>这样，无论访问者输入 <code>http://maquren.top</code> 还是 <code>https://</code>，最终都会跳到 HTTPS。</p>
+<hr>
+<h2 id="七第五步配置-cloudflare-email-routing可选但强烈推荐">七、第五步：配置 Cloudflare Email Routing（可选但强烈推荐）<a hidden class="anchor" aria-hidden="true" href="#七第五步配置-cloudflare-email-routing可选但强烈推荐">#</a></h2>
+<p>如果你想要一个 <strong>专业感更强的邮箱地址</strong>，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>contact@maquren.top
+</span></span><span style="display:flex;"><span>hi@maquren.top
+</span></span></code></pre></div><p>但又不想自己搭邮局服务器，可以使用 <strong>Cloudflare Email Routing</strong>（邮件转发）。</p>
+<ol>
+<li>在 Cloudflare 控制台中选择你的域名；</li>
+<li>左侧找到 <strong>Email → Email Routing</strong>；</li>
+<li>按向导开启 Email Routing；</li>
+<li>设置一个或多个自定义邮箱地址，并指定转发到你的实际邮箱（如 Gmail / QQ 邮箱）；</li>
+<li>Cloudflare 会自动为你添加所需的 MX 记录和 TXT 记录。</li>
+</ol>
+<blockquote>
+<p>这样，对外你可以用 <code>xxx@maquren.top</code> 作为收件邮箱，实际邮件会被转发到你常用的邮箱，非常适合对外展示和业务联系。</p>
+</blockquote>
+<hr>
+<h2 id="八第六步基础性能与安全优化">八、第六步：基础性能与安全优化<a hidden class="anchor" aria-hidden="true" href="#八第六步基础性能与安全优化">#</a></h2>
+<p>Cloudflare 免费版已经有不少默认不错的设置，你可以按需做一些增强。</p>
+<h3 id="1-打开基础缓存与压缩">1. 打开基础缓存与压缩<a hidden class="anchor" aria-hidden="true" href="#1-打开基础缓存与压缩">#</a></h3>
+<p>在 <strong>Speed / 性能</strong> 和 <strong>Caching / 缓存</strong> 菜单下：</p>
+<ul>
+<li>确认启用了：
+<ul>
+<li>静态资源缓存；</li>
+<li><code>gzip</code> / <code>brotli</code> 压缩；</li>
+</ul>
+</li>
+<li>一般默认就不错，新手不需要太多调整。</li>
+</ul>
+<h3 id="2-开启基础安全规则waf">2. 开启基础安全规则（WAF）<a hidden class="anchor" aria-hidden="true" href="#2-开启基础安全规则waf">#</a></h3>
+<p>在 <strong>Security / 安全 → WAF</strong> 中：</p>
+<ul>
+<li>免费版会有一些基础规则；</li>
+<li>可以启用常见的防护规则，比如通用 OWASP 规则；</li>
+<li>对于新站点，保持默认 + 观察即可，不用一开始就很激进。</li>
+</ul>
+<hr>
+<h2 id="九第七步绑定-cloudflare-pages如果你要做静态博客网站">九、第七步：绑定 Cloudflare Pages（如果你要做静态博客/网站）<a hidden class="anchor" aria-hidden="true" href="#九第七步绑定-cloudflare-pages如果你要做静态博客网站">#</a></h2>
+<p>如果你打算用 Cloudflare Pages 托管网站（比如 Hugo 博客），可以这样做：</p>
+<ol>
+<li>在 Cloudflare → Pages 创建项目，连接 GitHub 仓库；</li>
+<li>配置构建命令（例如 <code>hugo</code>）和输出目录（例如 <code>public</code>）；</li>
+<li>首次构建后，Pages 会给你一个 <code>xxx.pages.dev</code> 的地址；</li>
+<li>在 Pages 的 “自定义域” 中添加：
+<ul>
+<li><code>maquren.top</code> 或 <code>www.maquren.top</code>；</li>
+</ul>
+</li>
+<li>按提示，在 DNS 中添加对应的 CNAME 记录（通常会自动帮你添加）。</li>
+</ol>
+<p>完成后，你就可以通过自己的域名访问由 Pages 托管的静态网站了。</p>
+<blockquote>
+<p>更详细的 Pages 搭建过程，可以结合《域名免费网站搭建：Hugo + PaperMod + Cloudflare Pages + Giscus 实战》一文来看。</p>
+</blockquote>
+<hr>
+<h2 id="十常见问题与排查思路">十、常见问题与排查思路<a hidden class="anchor" aria-hidden="true" href="#十常见问题与排查思路">#</a></h2>
+<h3 id="问题-1访问域名提示网站未找到或-522525-错误">问题 1：访问域名提示“网站未找到”或 522/525 错误？<a hidden class="anchor" aria-hidden="true" href="#问题-1访问域名提示网站未找到或-522525-错误">#</a></h3>
+<p>排查顺序：</p>
+<ol>
+<li>在 Cloudflare → DNS 中确认对应记录是否存在（A/CNAME）；</li>
+<li>确认云朵是橙色还是灰色（是否走代理）；</li>
+<li>如果是指向自有服务器：
+<ul>
+<li>先直接用 IP 访问，确认源站是否正常；</li>
+<li>再确认 SSL 模式是否与源站匹配（Full/Flexible）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="问题-2更换-nameserver-很久还没生效">问题 2：更换 Nameserver 很久还没生效？<a hidden class="anchor" aria-hidden="true" href="#问题-2更换-nameserver-很久还没生效">#</a></h3>
+<ol>
+<li>在 <code>whois</code> 查询网站上查看 NS 是否已经变成 Cloudflare 的；</li>
+<li>确认注册商后台 NS 配置是否保存成功；</li>
+<li>一般最长不超过 24 小时，多数几分钟到半小时即可。</li>
+</ol>
+<h3 id="问题-3自定义邮箱收不到邮件">问题 3：自定义邮箱收不到邮件？<a hidden class="anchor" aria-hidden="true" href="#问题-3自定义邮箱收不到邮件">#</a></h3>
+<ol>
+<li>在 Cloudflare Email Routing 中查看是否配置了正确的目标邮箱；</li>
+<li>检查 DNS 中是否存在 MX 记录指向 Cloudflare 的邮件服务器；</li>
+<li>检查垃圾邮件文件夹；</li>
+<li>尝试从不同邮箱地址发送测试邮件。</li>
+</ol>
+<hr>
+<h2 id="十一总结白嫖-cloudflare-的最佳姿势">十一、总结：白嫖 Cloudflare 的最佳姿势<a hidden class="anchor" aria-hidden="true" href="#十一总结白嫖-cloudflare-的最佳姿势">#</a></h2>
+<p>到这里，你已经完成了从“买了个域名”到“用好 Cloudflare 免费能力”的关键步骤：</p>
+<ul>
+<li>Cloudflare 成为你的域名权威 DNS，享受全局加速和防护；</li>
+<li>配置了基础的 DNS 解析、SSL/TLS、HTTPS 强制跳转；</li>
+<li>可选地配置了 Email Routing，拥有专业的域名邮箱；</li>
+<li>为后续接入 Cloudflare Pages、Workers、KV、R2 等打好了基础。</li>
+</ul>
+<p>接下来，你可以继续结合另一篇文章《域名免费网站搭建：Hugo + PaperMod + Cloudflare Pages + Giscus 实战》，<br>
+把这个已经“白嫖到位”的 Cloudflare 域名，变成一个真正上线可用、可沉淀内容、可互动的个人技术网站。</p>
+<hr>
+<h2 id="相关阅读">相关阅读<a hidden class="anchor" aria-hidden="true" href="#相关阅读">#</a></h2>
+<ul>
+<li>如果你已经完成了 Cloudflare 的接入，现在可以继续看实战搭建文章：<br>
+<a href="/posts/%E5%9F%9F%E5%90%8D%E5%85%8D%E8%B4%B9%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/">《域名免费网站搭建：Hugo + PaperMod + Cloudflare Pages + Giscus 实战》</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/cloudflare/">Cloudflare</a></li>
+      <li><a href="http://localhost:1313/tags/dns/">DNS</a></li>
+      <li><a href="http://localhost:1313/tags/ssl/">SSL</a></li>
+      <li><a href="http://localhost:1313/tags/%E5%85%8D%E8%B4%B9%E5%BB%BA%E7%AB%99/">免费建站</a></li>
+      <li><a href="http://localhost:1313/tags/%E5%9F%9F%E5%90%8D%E9%85%8D%E7%BD%AE/">域名配置</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/%E5%9F%9F%E5%90%8D%E5%85%8D%E8%B4%B9%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>域名免费网站搭建：Hugo &#43; PaperMod &#43; Cloudflare Pages &#43; Giscus 实战</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">maquren · 技术与环境搭建</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
