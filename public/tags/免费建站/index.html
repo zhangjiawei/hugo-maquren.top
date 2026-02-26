@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="auto" data-theme="auto">
+<html lang="en" dir="auto" data-theme="dark">
 
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>免费建站 | maquren · 技术与环境搭建</title>
+<title>免费建站 | maquren(码趣人) - 有趣的编码世界</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="map[email:zhangjiawei@maquren.top name:maquren]">
@@ -28,46 +28,9 @@
         }
 
     </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --code-block-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-                color-scheme: dark;
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .toc {
-                background: var(--entry);
-            }
-        }
-
-        @media (prefers-color-scheme: light) {
-            .list::-webkit-scrollbar-thumb {
-                border-color: var(--code-bg);
-            }
-        }
-
-    </style>
 </noscript>
 <script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.querySelector("html").dataset.theme = 'dark';
-    } else if (localStorage.getItem("pref-theme") === "light") {
-       document.querySelector("html").dataset.theme = 'light';
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.querySelector("html").dataset.theme = 'dark';
-    } else {
+    if (localStorage.getItem("pref-theme") === "light") {
         document.querySelector("html").dataset.theme = 'light';
     }
 
@@ -77,7 +40,7 @@
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="maquren · 技术与环境搭建 (Alt + H)">maquren · 技术与环境搭建</a>
+            <a href="http://localhost:1313/" accesskey="h" title="maquren(码趣人) - 有趣的编码世界 (Alt + H)">maquren(码趣人) - 有趣的编码世界</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -150,10 +113,30 @@ Hugo：静态网站生成器，负责把 Markdown 文章变成 HTML 页面； Pa
   <footer class="entry-footer"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span></footer>
   <a class="entry-link" aria-label="post link to 域名免费网站搭建：Hugo &#43; PaperMod &#43; Cloudflare Pages &#43; Giscus 实战" href="http://localhost:1313/posts/%E5%9F%9F%E5%90%8D%E5%85%8D%E8%B4%B9%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/"></a>
 </article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">购买好域名后如何白嫖 Cloudflare：从注册到完整配置实战
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>一、前言：为什么一定要用 Cloudflare？ 大多数人买完域名，只停留在“能访问就行”。
+但对开发工程师/内容创作者来说，更理想的状态是：
+全站 HTTPS 加密，访问更安全、权重更友好； 有一层 全球 CDN 加速和 DDoS 防护； 可以方便地绑定各种服务（Pages、Workers、邮箱、对象存储等）； 最好是 完全免费、不自己运维服务器。 Cloudflare 的免费套餐正好满足这些需求。
+这篇文章就是：从你已经买好域名开始，教你如何“白嫖” Cloudflare 的核心能力，并把域名配置完整。
+本文示例以 maquren.top 为例，域名注册商以 NameSilo 为例，其他注册商（阿里云、腾讯云等）操作类似。
+二、前置条件：你需要准备什么 开始之前，请确认你已经具备：
+一个已购买的域名（例如：maquren.top），能登录到注册商后台（如 NameSilo）； 一个 Cloudflare 账号，如果没有可以先免费注册； 能访问 Cloudflare 控制台（https://dash.cloudflare.com）； 对 DNS 解析有基础概念（知道 A 记录 / CNAME 的大致含义即可）。 如果你还没有 Cloudflare 账号：
+打开 https://dash.cloudflare.com； 使用邮箱注册一个免费账号（Free Plan 就够用）； 登录后即可开始添加站点。 三、第一步：在 Cloudflare 添加你的域名 登录 Cloudflare 控制台； 点击右上角的 “Add a site” / “添加站点”； 输入你的域名（例如 maquren.top），注意不要带 http:// 或子域名； 选择套餐时，直接选 Free（免费版）； 继续后，Cloudflare 会尝试扫描你当前的 DNS 记录： 如果是新域名，基本上没有什么记录； 如果之前在别的地方已经有解析，可以先保留这些记录，后面再精简。 建议：
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span></footer>
+  <a class="entry-link" aria-label="post link to 购买好域名后如何白嫖 Cloudflare：从注册到完整配置实战" href="http://localhost:1313/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/"></a>
+</article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">maquren · 技术与环境搭建</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">maquren(码趣人) - 有趣的编码世界</a></span> · 
 
     <span>
         Powered by

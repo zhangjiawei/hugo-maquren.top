@@ -1,11 +1,11 @@
 baseURL = 'https://maquren.top/'
 languageCode = 'zh-cn'
-title = 'maquren · 技术与环境搭建'
+title = 'maquren(码趣人) - 有趣的编码世界'
 theme = 'PaperMod'
 paginate = 10
 
 [params]
-  defaultTheme = 'auto'
+  defaultTheme = 'dark'
   ShowReadingTime = true
   ShowShareButtons = false
   ShowPostNavLinks = true
