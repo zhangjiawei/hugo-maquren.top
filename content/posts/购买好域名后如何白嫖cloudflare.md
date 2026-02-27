@@ -1,8 +1,11 @@
 ---
 title: "购买好域名后如何白嫖 Cloudflare：从注册到完整配置实战"
 date: 2026-02-26
+lastmod: 2026-02-27
 description: "手把手教你在购买好域名后，用 0 成本接入 Cloudflare，完成 DNS、SSL、CDN、邮箱等关键配置。"
+categories: ["建站实战"]
 tags: ["Cloudflare", "DNS", "SSL", "免费建站", "域名配置"]
+keywords: ["Cloudflare DNS 配置", "Cloudflare SSL", "Cloudflare Email Routing", "域名接入 Cloudflare", "NameSilo 教程"]
 draft: false
 ---
 

@@ -2,19 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>DNS on maquren(码趣人) - 有趣的编码世界</title>
-    <link>http://localhost:1313/tags/dns/</link>
+    <link>https://maquren.top/tags/dns/</link>
     <description>Recent content in DNS on maquren(码趣人) - 有趣的编码世界</description>
+    <image>
+      <title>maquren(码趣人) - 有趣的编码世界</title>
+      <url>https://maquren.top/img/og-cover.png</url>
+      <link>https://maquren.top/img/og-cover.png</link>
+    </image>
     <generator>Hugo -- 0.157.0</generator>
     <language>zh-cn</language>
     <managingEditor>zhangjiawei@maquren.top (maquren)</managingEditor>
     <webMaster>zhangjiawei@maquren.top (maquren)</webMaster>
-    <lastBuildDate>Thu, 26 Feb 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/dns/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 27 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://maquren.top/tags/dns/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>购买好域名后如何白嫖 Cloudflare：从注册到完整配置实战</title>
-      <link>http://localhost:1313/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/</link>
+      <link>https://maquren.top/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/</link>
       <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><author>zhangjiawei@maquren.top (maquren)</author>
-      <guid>http://localhost:1313/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/</guid>
+      <guid>https://maquren.top/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/</guid>
       <description>手把手教你在购买好域名后，用 0 成本接入 Cloudflare，完成 DNS、SSL、CDN、邮箱等关键配置。</description>
     </item>
   </channel>

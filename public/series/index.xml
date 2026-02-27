@@ -2,12 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Series on maquren(码趣人) - 有趣的编码世界</title>
-    <link>http://localhost:1313/series/</link>
+    <link>https://maquren.top/series/</link>
     <description>Recent content in Series on maquren(码趣人) - 有趣的编码世界</description>
+    <image>
+      <title>maquren(码趣人) - 有趣的编码世界</title>
+      <url>https://maquren.top/img/og-cover.png</url>
+      <link>https://maquren.top/img/og-cover.png</link>
+    </image>
     <generator>Hugo -- 0.157.0</generator>
     <language>zh-cn</language>
     <managingEditor>zhangjiawei@maquren.top (maquren)</managingEditor>
     <webMaster>zhangjiawei@maquren.top (maquren)</webMaster>
-    <atom:link href="http://localhost:1313/series/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maquren.top/series/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

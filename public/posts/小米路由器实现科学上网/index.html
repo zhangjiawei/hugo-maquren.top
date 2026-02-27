@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战 | maquren(码趣人) - 有趣的编码世界</title>
+<meta name="keywords" content="小米路由器3G 刷机, ImmortalWrt 旁路由, OpenWrt 科学上网, R3G 教程, 路由器分流配置">
+<meta name="description" content="用小米路由器 3G（R3G）刷入 ImmortalWrt，做旁路由/二级路由，实现「连小米走策略网络、连光猫走国内网络」的分离方案。">
+<meta name="author" content="map[email:zhangjiawei@maquren.top name:maquren]">
+<link rel="canonical" href="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://maquren.top/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://maquren.top/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://maquren.top/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://maquren.top/apple-touch-icon.png">
+<link rel="mask-icon" href="https://maquren.top/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+
+<meta property="og:url" content="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">
+  <meta property="og:site_name" content="maquren(码趣人) - 有趣的编码世界">
+  <meta property="og:title" content="小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战">
+  <meta property="og:description" content="用小米路由器 3G（R3G）刷入 ImmortalWrt，做旁路由/二级路由，实现「连小米走策略网络、连光猫走国内网络」的分离方案。">
+  <meta property="og:locale" content="zh-cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-27T00:00:00+00:00">
+    <meta property="article:tag" content="OpenWrt">
+    <meta property="article:tag" content="小米路由器">
+    <meta property="article:tag" content="ImmortalWrt">
+    <meta property="article:tag" content="旁路由">
+    <meta property="article:tag" content="科学上网">
+    <meta property="article:tag" content="环境搭建">
+      <meta property="og:image" content="https://maquren.top/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://maquren.top/img/og-cover.png">
+<meta name="twitter:title" content="小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战">
+<meta name="twitter:description" content="用小米路由器 3G（R3G）刷入 ImmortalWrt，做旁路由/二级路由，实现「连小米走策略网络、连光猫走国内网络」的分离方案。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://maquren.top/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战",
+      "item": "https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战",
+  "name": "小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战",
+  "description": "用小米路由器 3G（R3G）刷入 ImmortalWrt，做旁路由/二级路由，实现「连小米走策略网络、连光猫走国内网络」的分离方案。",
+  "keywords": [
+    "小米路由器3G 刷机", "ImmortalWrt 旁路由", "OpenWrt 科学上网", "R3G 教程", "路由器分流配置"
+  ],
+  "articleBody": "前言 家里已经有光猫拨号、带 Wi‑Fi，再买一台可刷机的路由器做「旁路由」或「二级路由」，是很多人实现按设备分流的常见做法：\n需要走代理/策略网络的设备连到这台路由器，其余设备继续连光猫，互不干扰。\n小米路由器 3G（R3G） 双千兆、双频、带 USB3.0，硬件足够跑 OpenWrt 系固件，适合做这件事。\n本文基于真实实操整理：从原厂固件到刷入 ImmortalWrt，再到旁路由模式下的「科学上网」拓扑与配置要点；文末会附完整操作文档的索引，便于你按步骤执行。\n合规说明：本文仅涉及设备刷机、网络拓扑与通用配置方法。任何代理/跨境访问相关用途，请自行遵守当地法律法规与运营商条款；具体代理软件与规则配置请自行查阅官方文档。\n一、目标与效果 设备连小米（Wi‑Fi 或有线）：走你在这台路由器上配置的「策略网络」（透明代理、分流等）。 设备连光猫（Wi‑Fi 或有线）：走普通国内网络，不经小米。 可选：需要时可将小米切换为主路由拨号（PPPoE），仍由小米统一出口。 这样你不需要每台设备单独装客户端，只要把需要「科学上网」的设备接到小米即可。\n二、硬件与准备 适用机型 小米路由器 3G（R3G / MIR3G / xiaomi_mi-router-3g） 双千兆、2.4G/5G 双频、1 个 USB3.0 口，128MB Flash、256MB 内存。 建议准备 网线 ×1（建议全程有线操作） U 盘（FAT32，≥1GB）：用于 U 盘恢复刷机、存放固件与备份 小米账号：用于下载 miwifi_ssh.bin、获取 root 密码 电脑：macOS / Windows 均可（本文示例以 macOS 为主，Windows 下用浏览器 + 终端等价操作即可） 固件选择 官方 OpenWrt 对 R3G 的 Wi‑Fi 等驱动支持不完整，更推荐用 ImmortalWrt（社区维护，对小米 3G 支持较好）。\n本文以 ImmortalWrt 24.10.4（ramips/mt7621，xiaomi_mi-router-3g）为例。\n三、流程概览（少踩坑） 整体顺序可以概括为：\n刷小米「开发版」固件（U 盘恢复，不是稳定版） 绑定小米账号，在官方页面下载 miwifi_ssh.bin，获取 root 密码 再次 U 盘恢复，刷入 miwifi_ssh.bin，开启 SSH SSH 登录，将 ImmortalWrt 的 kernel1 / rootfs0 写入 NAND，并切换启动 首次进入 ImmortalWrt，设 root 密码，配 WAN/LAN/Wi‑Fi 旁路由模式：光猫 LAN → 小米 WAN（DHCP），小米 LAN 使用独立网段（如 192.168.31.1/24） 在 ImmortalWrt 上安装并配置你需要的代理/分流插件，实现「连小米 = 科学上网」 重要一点：刷机与首次配置阶段，建议光猫先不要接小米 WAN 口，电脑直连小米 LAN，避免网段冲突和 DHCP 干扰。\n四、关键步骤摘要 4.1 刷开发版 + 开启 SSH U 盘 FAT32，根目录只放开发版固件，并重命名为 miwifi.bin（不要用稳定版）。\n开发版示例：miwifi_r3g_firmware_12f97_2.25.124.bin 路由器断电 → 插 U 盘 → 按住 Reset 上电 → 指示灯进入恢复状态后松开，等待完成。 初始化后，用 Mi WiFi App 将路由器绑定到小米账号。 浏览器打开 https://d.miwifi.com/rom/ssh（若被改成 http，手动改回 https），登录后下载 miwifi_ssh.bin，并保存页面给出的 root 密码。 U 盘根目录只放 miwifi_ssh.bin，再次「按住 Reset 上电」走一遍 U 盘恢复。 完成后拔掉 U 盘，电脑网线接小米 LAN，SSH 登录（开发版一般为 192.168.31.1）： ssh -oKexAlgorithms=diffie-hellman-group14-sha1 -oHostKeyAlgorithms=ssh-rsa root@192.168.31.1 输入刚才的 root 密码即可。\n4.2 刷入 ImmortalWrt 提前下载好 kernel1 和 rootfs0 两个 bin 文件，并校验 sha256。\n示例目录：\nhttps://mirrors.ustc.edu.cn/immortalwrt/releases/24.10.4/targets/ramips/mt7621/ 建议先做分区备份（把 /proc/mtd 和关键 mtd 分区备份到 U 盘再拷回电脑），再执行写入。 将两个 bin 传到路由器（如 U 盘挂载点 /extdisks/sda1 或 /tmp），SSH 里执行（分区名以你 cat /proc/mtd 为准，R3G 常见为 kernel1 / rootfs0）： cd /extdisks/sda1 # 或你放固件的目录 mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin kernel1 mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin rootfs0 nvram set flag_try_sys1_failed=1 nvram commit reboot 重启后先不要接光猫，电脑网线接小米 LAN，浏览器打开 http://192.168.1.1，设置 root 密码并进入 LuCI。 4.3 旁路由网络配置（实现「连小米 = 策略网络」） 接线：光猫 LAN → 小米 WAN；需要走策略网络的设备接小米（Wi‑Fi 或 LAN）。 WAN：协议选 DHCP 客户端，从光猫获取地址。 LAN： 若光猫是 192.168.1.1，把小米 LAN 改成不冲突网段，例如 192.168.31.1/24，避免与光猫抢网关。 开启 DHCP，地址池如 192.168.31.100～192.168.31.200。 Wi‑Fi：开启 2.4G/5G，SSID 与光猫区分开，方便识别「连小米」和「连光猫」。 这样：\n连小米的设备 → 网关是 192.168.31.1，流量经小米，可走你配置的代理/分流； 连光猫的设备 → 网关是光猫，直连国内网络。 4.4 科学上网（策略网络）在路由器上怎么做 ImmortalWrt 装好并联网后，在 系统 → 软件包 中安装你需要的插件（例如与透明代理、策略路由相关的包）。\n具体装哪一类、如何配置规则与上游，取决于你使用的协议与合规要求，本文不展开具体代理配置；只强调两点：\n透明代理/分流：在路由器上跑客户端，让连小米的设备无感经过代理。 DNS：建议在 网络 → DHCP/DNS 中配置好上游 DNS 与缓存，避免 DNS 污染影响分流效果。 完成上述配置后，「连小米 = 科学上网、连光猫 = 国内网络」的拓扑即成立。\n五、可选：主路由模式（PPPoE 拨号） 若希望小米做主路由拨号，可把 WAN 改为 PPPoE，填入宽带账号密码。\n前提是光猫支持 PPPoE passthrough/多拨（不改光猫桥接的情况下）；否则拨号会失败，只能退回到 WAN 用 DHCP、从光猫拿私网地址（双重 NAT）。\n可在 LuCI 里先试 PPPoE，观察 30～60 秒；若拿不到公网地址，再改回 DHCP 即可。\n主路由与旁路由的切换，只需改 WAN 协议，接线保持「光猫 LAN → 小米 WAN」即可。\n六、救砖与回滚 若刷机后无法进入 ImmortalWrt 或想回原厂：\nU 盘恢复：U 盘 FAT32，根目录放原厂稳定版固件并重命名为 miwifi.bin（如 miwifi_r3g_firmware_9be74_2.28.44.bin），按住 Reset 上电，等待恢复完成。 更详细的分区备份、恢复以及完整刷机步骤，建议参考同一项目内的《小米路由器3G完美解锁》文档。 七、资源与完整文档 ImmortalWrt 24.10.4（R3G）：\nhttps://mirrors.ustc.edu.cn/immortalwrt/releases/24.10.4/targets/ramips/mt7621/\n需使用：*-kernel1.bin、*-rootfs0.bin（刷机），*-sysupgrade.bin（后续升级）。 小米开发版 / 稳定版固件：可从 mirom.ezbox.idv.tw 等索引页或官方渠道获取；开发版用于开启 SSH，稳定版用于救砖。 miwifi_ssh.bin：https://d.miwifi.com/rom/ssh（需登录小米账号）。 若你本地有 xiaomi3G_openwrt 项目，可使用其中脚本一键下载固件并校验，例如（在项目根目录）：\nbash xiaomi3G_openwrt/shell_script/macos/download_firmware.sh bash xiaomi3G_openwrt/shell_script/macos/verify_immortalwrt_sha256.sh 完整的分区备份、写入命令、模式 A/B 切换、USB 扩展（extroot/NAS/下载机）等，均写在 《小米路由器 3G 完美解锁》 中，可按该文档从零做到可用的旁路由 + 科学上网环境。\n小结 小米路由器 3G 通过「开发版 → miwifi_ssh.bin → SSH 写 kernel1/rootfs0」可稳定刷入 ImmortalWrt。 采用旁路由/二级路由：光猫 LAN → 小米 WAN（DHCP），小米 LAN 独立网段（如 192.168.31.1/24），即可实现「连小米走策略网络、连光猫走国内网络」。 在 ImmortalWrt 上安装并配置透明代理/分流插件，即可在这台路由器上实现科学上网；具体代理与规则请自行合规配置。 需要时可将 WAN 改为 PPPoE 尝试主路由拨号，不成功则改回 DHCP，接线方式不变。 如果你有 R3G 或同方案路由器，可按本文概览配合 《小米路由器 3G 完美解锁》 逐步操作，即可在家庭网络里实现按设备分流与科学上网。\n",
+  "wordCount" : "392",
+  "inLanguage": "en",
+  "image": "https://maquren.top/img/og-cover.png","datePublished": "2026-02-26T00:00:00Z",
+  "dateModified": "2026-02-27T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": {"email":"zhangjiawei@maquren.top","name":"maquren"}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "maquren(码趣人) - 有趣的编码世界",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://maquren.top/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://maquren.top/" accesskey="h" title="maquren(码趣人) - 有趣的编码世界 (Alt + H)">maquren(码趣人) - 有趣的编码世界</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://maquren.top/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://maquren.top/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://maquren.top/">Home</a>&nbsp;»&nbsp;<a href="https://maquren.top/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战
+    </h1>
+    <div class="post-description">
+      用小米路由器 3G（R3G）刷入 ImmortalWrt，做旁路由/二级路由，实现「连小米走策略网络、连光猫走国内网络」的分离方案。
+    </div>
+    <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="前言">前言<a hidden class="anchor" aria-hidden="true" href="#前言">#</a></h2>
+<p>家里已经有光猫拨号、带 Wi‑Fi，再买一台可刷机的路由器做「旁路由」或「二级路由」，是很多人实现<strong>按设备分流</strong>的常见做法：<br>
+需要走代理/策略网络的设备连到这台路由器，其余设备继续连光猫，互不干扰。</p>
+<p><strong>小米路由器 3G（R3G）</strong> 双千兆、双频、带 USB3.0，硬件足够跑 OpenWrt 系固件，适合做这件事。<br>
+本文基于真实实操整理：从原厂固件到刷入 <strong>ImmortalWrt</strong>，再到<strong>旁路由模式</strong>下的「科学上网」拓扑与配置要点；文末会附完整操作文档的索引，便于你按步骤执行。</p>
+<blockquote>
+<p><strong>合规说明</strong>：本文仅涉及设备刷机、网络拓扑与通用配置方法。任何代理/跨境访问相关用途，请自行遵守当地法律法规与运营商条款；具体代理软件与规则配置请自行查阅官方文档。</p>
+</blockquote>
+<hr>
+<h2 id="一目标与效果">一、目标与效果<a hidden class="anchor" aria-hidden="true" href="#一目标与效果">#</a></h2>
+<ul>
+<li><strong>设备连小米（Wi‑Fi 或有线）</strong>：走你在这台路由器上配置的「策略网络」（透明代理、分流等）。</li>
+<li><strong>设备连光猫（Wi‑Fi 或有线）</strong>：走普通国内网络，不经小米。</li>
+<li><strong>可选</strong>：需要时可将小米切换为主路由拨号（PPPoE），仍由小米统一出口。</li>
+</ul>
+<p>这样你不需要每台设备单独装客户端，只要把需要「科学上网」的设备接到小米即可。</p>
+<hr>
+<h2 id="二硬件与准备">二、硬件与准备<a hidden class="anchor" aria-hidden="true" href="#二硬件与准备">#</a></h2>
+<h3 id="适用机型">适用机型<a hidden class="anchor" aria-hidden="true" href="#适用机型">#</a></h3>
+<ul>
+<li><strong>小米路由器 3G</strong>（R3G / MIR3G / xiaomi_mi-router-3g）</li>
+<li>双千兆、2.4G/5G 双频、1 个 USB3.0 口，128MB Flash、256MB 内存。</li>
+</ul>
+<h3 id="建议准备">建议准备<a hidden class="anchor" aria-hidden="true" href="#建议准备">#</a></h3>
+<ul>
+<li>网线 ×1（建议全程有线操作）</li>
+<li>U 盘（FAT32，≥1GB）：用于 U 盘恢复刷机、存放固件与备份</li>
+<li>小米账号：用于下载 <code>miwifi_ssh.bin</code>、获取 root 密码</li>
+<li>电脑：macOS / Windows 均可（本文示例以 macOS 为主，Windows 下用浏览器 + 终端等价操作即可）</li>
+</ul>
+<h3 id="固件选择">固件选择<a hidden class="anchor" aria-hidden="true" href="#固件选择">#</a></h3>
+<p>官方 OpenWrt 对 R3G 的 Wi‑Fi 等驱动支持不完整，更推荐用 <strong>ImmortalWrt</strong>（社区维护，对小米 3G 支持较好）。<br>
+本文以 <strong>ImmortalWrt 24.10.4</strong>（ramips/mt7621，xiaomi_mi-router-3g）为例。</p>
+<hr>
+<h2 id="三流程概览少踩坑">三、流程概览（少踩坑）<a hidden class="anchor" aria-hidden="true" href="#三流程概览少踩坑">#</a></h2>
+<p>整体顺序可以概括为：</p>
+<ol>
+<li><strong>刷小米「开发版」固件</strong>（U 盘恢复，不是稳定版）</li>
+<li><strong>绑定小米账号</strong>，在官方页面下载 <strong><code>miwifi_ssh.bin</code></strong>，获取 root 密码</li>
+<li><strong>再次 U 盘恢复</strong>，刷入 <code>miwifi_ssh.bin</code>，开启 SSH</li>
+<li><strong>SSH 登录</strong>，将 ImmortalWrt 的 <code>kernel1</code> / <code>rootfs0</code> 写入 NAND，并切换启动</li>
+<li><strong>首次进入 ImmortalWrt</strong>，设 root 密码，配 WAN/LAN/Wi‑Fi</li>
+<li><strong>旁路由模式</strong>：光猫 LAN → 小米 WAN（DHCP），小米 LAN 使用独立网段（如 <code>192.168.31.1/24</code>）</li>
+<li>在 ImmortalWrt 上安装并配置你需要的<strong>代理/分流插件</strong>，实现「连小米 = 科学上网」</li>
+</ol>
+<p>重要一点：<strong>刷机与首次配置阶段，建议光猫先不要接小米 WAN 口</strong>，电脑直连小米 LAN，避免网段冲突和 DHCP 干扰。</p>
+<hr>
+<h2 id="四关键步骤摘要">四、关键步骤摘要<a hidden class="anchor" aria-hidden="true" href="#四关键步骤摘要">#</a></h2>
+<h3 id="41-刷开发版--开启-ssh">4.1 刷开发版 + 开启 SSH<a hidden class="anchor" aria-hidden="true" href="#41-刷开发版--开启-ssh">#</a></h3>
+<ul>
+<li>U 盘 FAT32，根目录只放<strong>开发版</strong>固件，并重命名为 <strong><code>miwifi.bin</code></strong>（不要用稳定版）。<br>
+开发版示例：<code>miwifi_r3g_firmware_12f97_2.25.124.bin</code></li>
+<li>路由器断电 → 插 U 盘 → <strong>按住 Reset 上电</strong> → 指示灯进入恢复状态后松开，等待完成。</li>
+<li>初始化后，用 <strong>Mi WiFi App</strong> 将路由器绑定到小米账号。</li>
+<li>浏览器打开 <strong><a href="https://d.miwifi.com/rom/ssh">https://d.miwifi.com/rom/ssh</a></strong>（若被改成 http，手动改回 https），登录后下载 <code>miwifi_ssh.bin</code>，并保存页面给出的 <strong>root 密码</strong>。</li>
+<li>U 盘根目录只放 <strong><code>miwifi_ssh.bin</code></strong>，再次「按住 Reset 上电」走一遍 U 盘恢复。</li>
+<li>完成后拔掉 U 盘，电脑网线接小米 <strong>LAN</strong>，SSH 登录（开发版一般为 <code>192.168.31.1</code>）：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh -oKexAlgorithms<span style="color:#f92672">=</span>diffie-hellman-group14-sha1 -oHostKeyAlgorithms<span style="color:#f92672">=</span>ssh-rsa root@192.168.31.1
+</span></span></code></pre></div><p>输入刚才的 root 密码即可。</p>
+<h3 id="42-刷入-immortalwrt">4.2 刷入 ImmortalWrt<a hidden class="anchor" aria-hidden="true" href="#42-刷入-immortalwrt">#</a></h3>
+<ul>
+<li>提前下载好 <strong>kernel1</strong> 和 <strong>rootfs0</strong> 两个 bin 文件，并校验 sha256。<br>
+示例目录：<br>
+<code>https://mirrors.ustc.edu.cn/immortalwrt/releases/24.10.4/targets/ramips/mt7621/</code></li>
+<li>建议先做<strong>分区备份</strong>（把 <code>/proc/mtd</code> 和关键 mtd 分区备份到 U 盘再拷回电脑），再执行写入。</li>
+<li>将两个 bin 传到路由器（如 U 盘挂载点 <code>/extdisks/sda1</code> 或 <code>/tmp</code>），SSH 里执行（分区名以你 <code>cat /proc/mtd</code> 为准，R3G 常见为 kernel1 / rootfs0）：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /extdisks/sda1   <span style="color:#75715e"># 或你放固件的目录</span>
+</span></span><span style="display:flex;"><span>mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin kernel1
+</span></span><span style="display:flex;"><span>mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin rootfs0
+</span></span><span style="display:flex;"><span>nvram set flag_try_sys1_failed<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>nvram commit
+</span></span><span style="display:flex;"><span>reboot
+</span></span></code></pre></div><ul>
+<li>重启后<strong>先不要接光猫</strong>，电脑网线接小米 LAN，浏览器打开 <strong>http://192.168.1.1</strong>，设置 root 密码并进入 LuCI。</li>
+</ul>
+<h3 id="43-旁路由网络配置实现连小米--策略网络">4.3 旁路由网络配置（实现「连小米 = 策略网络」）<a hidden class="anchor" aria-hidden="true" href="#43-旁路由网络配置实现连小米--策略网络">#</a></h3>
+<ul>
+<li><strong>接线</strong>：光猫 LAN → 小米 <strong>WAN</strong>；需要走策略网络的设备接小米（Wi‑Fi 或 LAN）。</li>
+<li><strong>WAN</strong>：协议选 <strong>DHCP 客户端</strong>，从光猫获取地址。</li>
+<li><strong>LAN</strong>：
+<ul>
+<li>若光猫是 <code>192.168.1.1</code>，把小米 LAN 改成<strong>不冲突网段</strong>，例如 <strong><code>192.168.31.1/24</code></strong>，避免与光猫抢网关。</li>
+<li>开启 DHCP，地址池如 <code>192.168.31.100</code>～<code>192.168.31.200</code>。</li>
+</ul>
+</li>
+<li><strong>Wi‑Fi</strong>：开启 2.4G/5G，SSID 与光猫区分开，方便识别「连小米」和「连光猫」。</li>
+</ul>
+<p>这样：</p>
+<ul>
+<li>连小米的设备 → 网关是 <code>192.168.31.1</code>，流量经小米，可走你配置的代理/分流；</li>
+<li>连光猫的设备 → 网关是光猫，直连国内网络。</li>
+</ul>
+<h3 id="44-科学上网策略网络在路由器上怎么做">4.4 科学上网（策略网络）在路由器上怎么做<a hidden class="anchor" aria-hidden="true" href="#44-科学上网策略网络在路由器上怎么做">#</a></h3>
+<p>ImmortalWrt 装好并联网后，在 <strong>系统 → 软件包</strong> 中安装你需要的插件（例如与透明代理、策略路由相关的包）。<br>
+具体装哪一类、如何配置规则与上游，取决于你使用的协议与合规要求，本文不展开具体代理配置；只强调两点：</p>
+<ul>
+<li><strong>透明代理/分流</strong>：在路由器上跑客户端，让连小米的设备无感经过代理。</li>
+<li><strong>DNS</strong>：建议在 <strong>网络 → DHCP/DNS</strong> 中配置好上游 DNS 与缓存，避免 DNS 污染影响分流效果。</li>
+</ul>
+<p>完成上述配置后，「连小米 = 科学上网、连光猫 = 国内网络」的拓扑即成立。</p>
+<hr>
+<h2 id="五可选主路由模式pppoe-拨号">五、可选：主路由模式（PPPoE 拨号）<a hidden class="anchor" aria-hidden="true" href="#五可选主路由模式pppoe-拨号">#</a></h2>
+<p>若希望小米做<strong>主路由</strong>拨号，可把 WAN 改为 <strong>PPPoE</strong>，填入宽带账号密码。<br>
+前提是光猫支持 <strong>PPPoE passthrough/多拨</strong>（不改光猫桥接的情况下）；否则拨号会失败，只能退回到 WAN 用 DHCP、从光猫拿私网地址（双重 NAT）。<br>
+可在 LuCI 里先试 PPPoE，观察 30～60 秒；若拿不到公网地址，再改回 DHCP 即可。<br>
+主路由与旁路由的切换，只需改 WAN 协议，接线保持「光猫 LAN → 小米 WAN」即可。</p>
+<hr>
+<h2 id="六救砖与回滚">六、救砖与回滚<a hidden class="anchor" aria-hidden="true" href="#六救砖与回滚">#</a></h2>
+<p>若刷机后无法进入 ImmortalWrt 或想回原厂：</p>
+<ul>
+<li><strong>U 盘恢复</strong>：U 盘 FAT32，根目录放<strong>原厂稳定版</strong>固件并重命名为 <strong><code>miwifi.bin</code></strong>（如 <code>miwifi_r3g_firmware_9be74_2.28.44.bin</code>），按住 Reset 上电，等待恢复完成。</li>
+<li>更详细的<strong>分区备份、恢复</strong>以及<strong>完整刷机步骤</strong>，建议参考同一项目内的《小米路由器3G完美解锁》文档。</li>
+</ul>
+<hr>
+<h2 id="七资源与完整文档">七、资源与完整文档<a hidden class="anchor" aria-hidden="true" href="#七资源与完整文档">#</a></h2>
+<ul>
+<li><strong>ImmortalWrt 24.10.4（R3G）</strong>：<br>
+<code>https://mirrors.ustc.edu.cn/immortalwrt/releases/24.10.4/targets/ramips/mt7621/</code><br>
+需使用：<code>*-kernel1.bin</code>、<code>*-rootfs0.bin</code>（刷机），<code>*-sysupgrade.bin</code>（后续升级）。</li>
+<li><strong>小米开发版 / 稳定版固件</strong>：可从 <code>mirom.ezbox.idv.tw</code> 等索引页或官方渠道获取；开发版用于开启 SSH，稳定版用于救砖。</li>
+<li><strong>miwifi_ssh.bin</strong>：https://d.miwifi.com/rom/ssh（需登录小米账号）。</li>
+</ul>
+<p>若你本地有 <strong>xiaomi3G_openwrt</strong> 项目，可使用其中脚本一键下载固件并校验，例如（在项目根目录）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>bash xiaomi3G_openwrt/shell_script/macos/download_firmware.sh
+</span></span><span style="display:flex;"><span>bash xiaomi3G_openwrt/shell_script/macos/verify_immortalwrt_sha256.sh
+</span></span></code></pre></div><p>完整的分区备份、写入命令、模式 A/B 切换、USB 扩展（extroot/NAS/下载机）等，均写在 <a href="/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83G%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/">《小米路由器 3G 完美解锁》</a> 中，可按该文档从零做到可用的旁路由 + 科学上网环境。</p>
+<hr>
+<h2 id="小结">小结<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h2>
+<ul>
+<li>小米路由器 3G 通过「开发版 → miwifi_ssh.bin → SSH 写 kernel1/rootfs0」可稳定刷入 ImmortalWrt。</li>
+<li>采用<strong>旁路由/二级路由</strong>：光猫 LAN → 小米 WAN（DHCP），小米 LAN 独立网段（如 192.168.31.1/24），即可实现「连小米走策略网络、连光猫走国内网络」。</li>
+<li>在 ImmortalWrt 上安装并配置透明代理/分流插件，即可在这台路由器上实现科学上网；具体代理与规则请自行合规配置。</li>
+<li>需要时可将 WAN 改为 PPPoE 尝试主路由拨号，不成功则改回 DHCP，接线方式不变。</li>
+</ul>
+<p>如果你有 R3G 或同方案路由器，可按本文概览配合 <a href="/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83G%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/">《小米路由器 3G 完美解锁》</a> 逐步操作，即可在家庭网络里实现按设备分流与科学上网。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://maquren.top/tags/openwrt/">OpenWrt</a></li>
+      <li><a href="https://maquren.top/tags/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8/">小米路由器</a></li>
+      <li><a href="https://maquren.top/tags/immortalwrt/">ImmortalWrt</a></li>
+      <li><a href="https://maquren.top/tags/%E6%97%81%E8%B7%AF%E7%94%B1/">旁路由</a></li>
+      <li><a href="https://maquren.top/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">科学上网</a></li>
+      <li><a href="https://maquren.top/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">环境搭建</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83g%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由/主路由双模式</span>
+  </a>
+  <a class="next" href="https://maquren.top/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/">
+    <span class="title">Next »</span>
+    <br>
+    <span>购买好域名后如何白嫖 Cloudflare：从注册到完整配置实战</span>
+  </a>
+</nav>
+
+  </footer><div class="comments-separator"></div>
+<section class="comments">
+  <script src="https://utteranc.es/client.js"
+          repo="zhangjiawei/hugo-maquren.top"
+          issue-term="pathname"
+          label="comment"
+          theme="github-dark"
+          crossorigin="anonymous"
+          async>
+  </script>
+</section>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://maquren.top/">maquren(码趣人) - 有趣的编码世界</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

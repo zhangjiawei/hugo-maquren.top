@@ -1,0 +1,15 @@
+{{- /* Comments renderer (Utterances) */ -}}
+{{- $utterances := site.Params.utterances -}}
+{{- if and $utterances $utterances.enabled $utterances.repo -}}
+<div class="comments-separator"></div>
+<section class="comments">
+  <script src="https://utteranc.es/client.js"
+          repo="{{ $utterances.repo }}"
+          issue-term="{{ $utterances.issueTerm | default "pathname" }}"
+          label="{{ $utterances.label | default "comment" }}"
+          theme="{{ $utterances.theme | default "github-dark" }}"
+          crossorigin="{{ $utterances.crossorigin | default "anonymous" }}"
+          async>
+  </script>
+</section>
+{{- end -}}

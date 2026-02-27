@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由/主路由双模式 | maquren(码趣人) - 有趣的编码世界</title>
+<meta name="keywords" content="小米路由器3G 完美解锁, R3G ImmortalWrt, OpenWrt 刷机教程, 旁路由主路由切换, 路由器救砖回滚">
+<meta name="description" content="小米路由器 3G（R3G）从开发版到 SSH、刷入 ImmortalWrt，旁路由/主路由双模式配置，USB 扩展与救砖回滚完整步骤。">
+<meta name="author" content="map[email:zhangjiawei@maquren.top name:maquren]">
+<link rel="canonical" href="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83g%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://maquren.top/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://maquren.top/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://maquren.top/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://maquren.top/apple-touch-icon.png">
+<link rel="mask-icon" href="https://maquren.top/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83g%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+
+<meta property="og:url" content="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83g%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/">
+  <meta property="og:site_name" content="maquren(码趣人) - 有趣的编码世界">
+  <meta property="og:title" content="小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由/主路由双模式">
+  <meta property="og:description" content="小米路由器 3G（R3G）从开发版到 SSH、刷入 ImmortalWrt，旁路由/主路由双模式配置，USB 扩展与救砖回滚完整步骤。">
+  <meta property="og:locale" content="zh-cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-27T00:00:00+00:00">
+    <meta property="article:tag" content="OpenWrt">
+    <meta property="article:tag" content="小米路由器">
+    <meta property="article:tag" content="ImmortalWrt">
+    <meta property="article:tag" content="旁路由">
+    <meta property="article:tag" content="刷机">
+    <meta property="article:tag" content="环境搭建">
+      <meta property="og:image" content="https://maquren.top/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://maquren.top/img/og-cover.png">
+<meta name="twitter:title" content="小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由/主路由双模式">
+<meta name="twitter:description" content="小米路由器 3G（R3G）从开发版到 SSH、刷入 ImmortalWrt，旁路由/主路由双模式配置，USB 扩展与救砖回滚完整步骤。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://maquren.top/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由/主路由双模式",
+      "item": "https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83g%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由/主路由双模式",
+  "name": "小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由\/主路由双模式",
+  "description": "小米路由器 3G（R3G）从开发版到 SSH、刷入 ImmortalWrt，旁路由/主路由双模式配置，USB 扩展与救砖回滚完整步骤。",
+  "keywords": [
+    "小米路由器3G 完美解锁", "R3G ImmortalWrt", "OpenWrt 刷机教程", "旁路由主路由切换", "路由器救砖回滚"
+  ],
+  "articleBody": "说明 本文面向 小米路由器 3G（R3G / MIR3G / xiaomi_mi-router-3g），目标是刷入基于 OpenWrt 的系统（本文以 ImmortalWrt 稳定版为主），并实现：\n模式 A（旁路由/二级路由）：设备连接小米 3G（Wi‑Fi/有线）→ 走“策略网络”；设备连接光猫（Wi‑Fi/有线）→ 走“普通国内网络”。 模式 B（主路由）：小米 3G 尽量支持作为主路由工作；若光猫不桥接且不支持 PPPoE passthrough/多拨，则退化为“双重 NAT 的主路由体验”。 USB3.0 扩展：挂载 U 盘/移动硬盘，做 extroot（扩容）、插件仓库、NAS、下载机等。 合规提示：本文只提供设备刷机、网络基础配置、存储与服务的通用方法。涉及“代理/隧道/VPN 等跨境访问”用途，请务必遵守当地法律法规与运营商条款；本文不会提供绕过监管的具体操作指导。\n项目目录结构（你电脑上的仓库） xiaomi3G_openwrt/tools/macos/：macOS 侧可能用到的工具/下载产物 xiaomi3G_openwrt/shell_script/macos/：macOS 侧脚本（下载、校验） 你需要准备什么 硬件 网线 ×1（强烈建议全程有线） U 盘（FAT32）×1（≥1GB；用于“U 盘恢复刷机/存放镜像/备份”） USB3.0 移动硬盘或大容量 U 盘 ×1（建议 ≥32GB；用于 extroot + 数据盘） 手机（用于 Mi WiFi App 绑定小米账号） 账号/软件 小米账号（用于下载 miwifi_ssh.bin、获取 root 密码） macOS 终端（自带 ssh、scp、curl、shasum） 重要概念（先看，少踩坑） 1）为什么要“开发版 → SSH → 写入 ImmortalWrt” 小米原厂固件默认不开放 SSH。常见可行流程是：\n通过 U 盘恢复刷入 开发版固件 绑定到小米账号后，从官方页面下载 miwifi_ssh.bin 并获得 root 密码 再次通过 U 盘恢复刷入 miwifi_ssh.bin，开启 SSH SSH 登录后，把 ImmortalWrt 写入 NAND 指定分区（kernel1 / rootfs0） 2）为何“不改桥接”时 PPPoE 可能失败 PPPoE 通常需要二层透传（桥接）或光猫支持 PPPoE passthrough/多拨。你目前“不想/不能桥接光猫”，所以模式 B 分两种：\nB1（理想）：光猫支持 PPPoE passthrough/多拨 → 小米 WAN 可 PPPoE 成功 B2（常见）：光猫不支持且不桥接 → 小米无法 PPPoE，只能 DHCP 上联（双重 NAT） 固件与资源下载（强烈建议先下载完并校验） 1）一键下载与校验（macOS） 在仓库根目录执行：\nbash xiaomi3G_openwrt/shell_script/macos/download_firmware.sh bash xiaomi3G_openwrt/shell_script/macos/verify_immortalwrt_sha256.sh 下载产物默认在：\nxiaomi3G_openwrt/tools/macos/downloads/ 2）本文使用的关键下载链接（可手动下载） ImmortalWrt（用于刷机） 目录（含 sha256sums）：https://mirrors.ustc.edu.cn/immortalwrt/releases/24.10.4/targets/ramips/mt7621/ R3G 写入分区用文件： immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin R3G 后续升级用文件： immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-sysupgrade.bin 小米原厂固件（用于开发版/救砖回滚） （来源索引页：https://mirom.ezbox.idv.tw/en/miwifi/R3G/）\n重要：先分清“开发版”与“稳定版”\n开发版：用于开启 SSH（后续刷 ImmortalWrt 必经） 稳定版：用于救砖/回滚（让路由器恢复到原厂可用状态） 稳定版（救砖回滚用，最新稳定）：\nhttps://bigota.miwifi.com/xiaoqiang/rom/r3g/miwifi_r3g_firmware_9be74_2.28.44.bin （可选）稳定版（备份你当前正在用的版本：2.28.24）：\nhttps://bigota.miwifi.com/xiaoqiang/rom/r3g/miwifi_r3g_firmware_26d93_2.28.24.bin 用途：如果你后续想回到你现在这版（而不是 2.28.44），就用它做 U 盘恢复回滚。 开发版（走 SSH 流程用，最新开发）：\nhttps://bigota.miwifi.com/xiaoqiang/rom/r3g/miwifi_r3g_firmware_12f97_2.25.124.bin miwifi_ssh.bin（需要登录小米账号） 获取入口：https://d.miwifi.com/rom/ssh 该页面常见问题：URL 可能被页面脚本改成 http 导致打不开，手动改回 https 即可。\n模式与接线 刷机/解锁阶段建议接线（先看，少踩坑） 为了避免网段冲突、DHCP 干扰、以及误插 WAN 口导致“电脑拿不到 IP”，建议你按阶段接线：\n阶段 1：第 1~3 步（刷开发版 / 刷 miwifi_ssh.bin / SSH 写入 ImmortalWrt）\n光猫：先不连接（小米 WAN 口保持空着） 电脑：网线直连小米 LAN 口（不要插 WAN） U 盘：只在“U 盘恢复刷机/写入”那一刻插入；完成后就拔掉（下面各步骤会再次提醒） 阶段 2：进入 ImmortalWrt 后配置模式 A/B（第 5~6 步）\n光猫 LAN → 小米 WAN 口 设备按需连接小米（走策略网络）或光猫（走国内网络） 模式 A：旁路由/二级路由（推荐日常） 光猫：保持拨号/NAT/DHCP/Wi‑Fi（国内网络） 小米（ImmortalWrt）：做二级路由（你把需要“策略网络”的设备连到小米） 接线：\n光猫 LAN → 小米 WAN 口 设备 → 小米（Wi‑Fi/有线） 模式 B：主路由（按需切换） 你希望“需要的时候手动切换”，因此仍推荐接线保持一致：\n光猫 LAN → 小米 WAN 口 只在 ImmortalWrt 里切换 WAN 协议：\n尝试 PPPoE（B1） 失败则改回 DHCP（B2） 第 1 步：刷入小米“开发版固件”（U 盘恢复） 1.1 制作 U 盘（FAT32 + miwifi.bin） U 盘格式化为 FAT32（你可以用 macOS“磁盘工具”图形界面完成） 把开发版固件复制到 U 盘根目录，并重命名为 miwifi.bin 原文件：miwifi_r3g_firmware_12f97_2.25.124.bin 不要拿稳定版（2.28.xx）来做这一步：稳定版不用于开启 SSH 1.2 进入 U 盘恢复刷机 路由器断电 U 盘插入路由器 USB 口 按住 Reset 不放，上电 看到指示灯进入刷机/恢复状态（通常黄灯闪烁/呼吸）后松开 Reset 等待数分钟直到完成并重启 建议：本阶段先不要连接光猫；刷机完成、蓝灯稳定后，把 U 盘拔掉 再进行初始化。\n1.3 初次初始化（网页端） 电脑接入小米路由器 LAN（或 Wi‑Fi），打开管理页完成初始化（管理员密码/Wi‑Fi 名称）。\n第 2 步：绑定小米账号并安装 SSH（miwifi_ssh.bin） 2.1 绑定路由器到小米账号 手机连接小米路由器 Wi‑Fi 打开 Mi WiFi App，登录小米账号 按引导把路由器绑定到账号 2.2 下载 miwifi_ssh.bin 并获取 root 密码 用浏览器打开：https://d.miwifi.com/rom/ssh 登录小米账号后按页面提示操作 下载得到 miwifi_ssh.bin 页面会给出 root 密码（或生成与序列号相关的密码）——务必保存 2.3 用 U 盘恢复刷入 miwifi_ssh.bin U 盘根目录只放 miwifi_ssh.bin（不要再放 miwifi.bin） 重复“按住 Reset 上电 → 等待完成”的 U 盘恢复流程 强烈建议：执行完成、蓝灯稳定后 拔掉 U 盘 再重启一次路由器，然后再做 2.4（避免 U 盘残留触发重复流程/影响排错）。\n2.4 SSH 登录验证 电脑接入小米路由器 LAN 终端执行（开发版 LAN 侧常见为 192.168.31.1）： # macOS 新版 OpenSSH 可能不兼容小米开发版的旧算法，推荐用下面这条（你已实测可用） ssh \\ -oKexAlgorithms=diffie-hellman-group14-sha1 \\ -oHostKeyAlgorithms=ssh-rsa \\ root@192.168.31.1 输入第 2.2 步获得的 root 密码 能登录即表示 SSH 已就绪。\n第 3 步：刷入 ImmortalWrt（写入 kernel1 / rootfs0） 这是最关键步骤：会写 NAND。强烈建议先备份分区。\n接线建议（本步骤期间）：\n光猫：先不连接（小米 WAN 口保持空着） 电脑：网线直连小米 LAN 口 U 盘：仅用于“备份分区/存放镜像/写入”，完成后建议拔掉 3.1 备份分区（建议必做） 插入 U 盘（FAT32）到路由器 USB 口 SSH 登录后查看分区表： cat /proc/mtd 你这台 R3G 的分区表（你已实测）里，关键分区名如下：\nkernel1：mtd9 rootfs0：mtd10 后续写入 ImmortalWrt 时会用到的就是这两个“分区名”（不是 mtd 编号）。\n找到 U 盘挂载点（不同固件可能不同）： mount df -h 你当前环境里 U 盘识别为 /dev/sda1，挂载在 /extdisks/sda1（你已实测）。 下面示例就以 USB=/extdisks/sda1 为准。\n备份（推荐：把所有 mtd 分区都备份一份，最省心）： USB=/extdisks/sda1 mkdir -p \"$USB/backup/mtd\" # 记录分区表和关键启动变量（排查/回滚会用到） cat /proc/mtd \u003e \"$USB/backup/proc_mtd.txt\" nvram show \u003e \"$USB/backup/nvram_show.txt\" 2\u003e/dev/null || true # 备份所有分区（跳过 /proc/mtd 表头） # 注意：小米开发版环境用的是 /bin/ash，可能不支持 bash 的 “done \u003c \u003c(…)” 进程替换写法； # 同时某些分区（例如你这里的 mtd14 \"data\"）正在被系统挂载使用，会出现 “Device or resource busy”，属于正常现象。 # 处理原则： # - 先保证把关键分区（尤其是 bootloader/factory/kernel/rootfs）备份到位 # - 对于 busy 的分区：记录 WARN 并跳过即可（你已经备份了 mtd0 \"ALL\" 时更不影响救砖） tail -n +2 /proc/mtd | while read -r dev size erasesize name; do # dev: mtd0: dev=\"${dev%:}\" # name: \"bootloader\" name=\"${name%\\\"}\" name=\"${name#\\\"}\" echo \"backup $dev -\u003e ${name}.bin\" dd if=\"/dev/${dev}\" of=\"$USB/backup/mtd/${dev}_${name}.bin\" || echo \"[WARN] skip ${dev} (${name})\" done sync ls -lh \"$USB/backup/mtd\" | head 可选：如果你想把“data（/data）里的内容”也备份一份（不碰 raw 分区，最安全），可以打包目录：\ntar -C / -czf \"$USB/backup/data_dir.tgz\" data sync 说明：这里用 tail -n +2 跳过 /proc/mtd 第一行表头。若你的系统没有 tail -n +2，可改成 sed '1d' /proc/mtd。\n把备份拷回电脑（macOS）长期保存： # 先确认U盘挂载点，再把备份目录拷到电脑当前目录 # 说明：macOS 新版 OpenSSH 的 scp 默认走 SFTP；而小米开发版环境可能缺少 sftp-server， # 会报 “/usr/libexec/sftp-server: not found”。用 -O 强制走旧版 SCP 协议即可。 scp -O -r \\ -oKexAlgorithms=diffie-hellman-group14-sha1 \\ -oHostKeyAlgorithms=ssh-rsa \\ root@192.168.31.1:/extdisks/sda1/backup ./backup_r3g_$(date +%F)/ 说明：小米开发版的 SSH 算法较旧，macOS 新版 OpenSSH/scp 可能报 “no matching key exchange method found”。上面命令通过 -oKexAlgorithms 做了兼容。 另外，有些环境的 scp 不支持 KexAlgorithms=+xxx 这种“追加语法”，所以这里用的是“直接指定算法列表”的写法（兼容性更好）。 等你刷入 ImmortalWrt 后通常不再需要这些参数。\n备选方案（不用 scp）：用 tar 走 SSH 打包传回本地（也兼容缺少 sftp-server 的环境）：\nssh -oKexAlgorithms=diffie-hellman-group14-sha1 -oHostKeyAlgorithms=ssh-rsa root@192.168.31.1 \\ \"tar -C /extdisks/sda1 -czf - backup\" \u003e \"backup_r3g_$(date +%F).tgz\" 备份完成后不要只放在 U 盘：建议再拷到 NAS/云盘一份（救砖时非常值钱）。 3.2 准备 ImmortalWrt 镜像文件 把下面两个文件准备好（推荐放到 U 盘根目录；也可以用 macOS 直接 scp 上传）：\nimmortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin 并确保已通过 sha256sums 校验。\n方式 A（推荐）：直接上传到 U 盘挂载点（你这里是 /extdisks/sda1，后面的写入命令就不用改）：\ncd xiaomi3G_openwrt/tools/macos/downloads scp -O \\ -oKexAlgorithms=diffie-hellman-group14-sha1 \\ -oHostKeyAlgorithms=ssh-rsa \\ immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin \\ immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin \\ root@192.168.31.1:/extdisks/sda1/ 方式 B（备选）：上传到路由器 /tmp（临时目录，重启会清空；后面的写入命令需要把 cd 改到 /tmp）：\ncd xiaomi3G_openwrt/tools/macos/downloads # 说明：小米开发版 SSH 算法较旧，且可能缺少 sftp-server； # -O 强制 scp 走旧协议，避免默认走 SFTP 报错 scp -O \\ -oKexAlgorithms=diffie-hellman-group14-sha1 \\ -oHostKeyAlgorithms=ssh-rsa \\ immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin \\ immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin \\ root@192.168.31.1:/tmp/ 3.3 写入镜像并切换启动 注意：分区名必须是 kernel1 与 rootfs0（R3G 常见布局如此）。执行前先用 cat /proc/mtd 确认；写错分区会变砖。\n这里需要登录到路由器 root@192.168.31.1\n# 如果你按“方式 A”把固件放到 U 盘：就在 /extdisks/sda1 执行 # 如果你按“方式 B”把固件放到 /tmp：就把下面这行改成 cd /tmp cd /extdisks/sda1 # 先确认文件存在、大小正常（避免写入 0 字节/下载不完整） ls -lh immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin \\ immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin kernel1 mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin rootfs0 # 启动标记（不同小米固件变量可能略有差异） nvram set flag_try_sys1_failed=1 nvram commit reboot 第 4 步：首次进入 ImmortalWrt 与基础设置 首次刷入后 Wi‑Fi 可能未配置，建议按下面方式做“首次登录”，最不容易卡住：\n断开光猫（先不要把小米 WAN 接到光猫，避免网段冲突/浏览器缓存跳转）。 电脑用网线连接小米 LAN 口。 等待重启完成（NAND 写入后首次启动可能更慢，建议等 3~5 分钟）。 打开 http://192.168.1.1（如打不开，尝试把电脑网卡改成静态 IP：192.168.1.2/24，网关 192.168.1.1）。 设置 root 密码并进入 LuCI。 常见问题排查：\n进不了 192.168.1.1：先 ping 192.168.1.1 看是否通；不通就换网线/换 LAN 口/等更久；仍不通 → 进入“救砖/回滚”章节用 USB 恢复回原厂再重试。 网段冲突：如果你家光猫是 192.168.1.1（常见），等你后面把小米做二级路由时，小米 LAN 一定要改成别的网段（例如 192.168.31.1，见第 5 步）。 第 5 步：模式 A（旁路由/二级路由）网络配置 5.1 IP 规划建议 光猫 LAN：保持现状（例如 192.168.1.1/24 或 192.168.0.1/24） 小米 LAN：改为不冲突网段，例如 192.168.31.1/24（适用于你当前“光猫 192.168.1.1”的情况） 5.2 WAN（上联光猫） 协议：DHCP Client 5.3 LAN / DHCP LAN IP：192.168.31.1/24 DHCP：开启（例如 192.168.31.100 - 192.168.31.200） 5.4 Wi‑Fi 2.4G/5G 都开启 SSID 明确区分（按你的命名）：Xiaomi_zjw（2.4G） / Xiaomi_zjw_5G（5G） 5.5 LuCI 按图操作（小白版） 接线先按模式 A：\n光猫 LAN → 小米 WAN 电脑先连小米 LAN 口进入 LuCI 在 LuCI 依次做：\n网络 → 接口 → WAN 协议：DHCP 客户端 保存\u0026应用 网络 → 接口 → LAN IPv4 地址：192.168.31.1 IPv4 子网掩码：255.255.255.0 保存\u0026应用 网络 → DHCP/DNS 确认 LAN 口 DHCP 服务已启用 地址池建议：192.168.31.100 - 192.168.31.200 网络 → 无线 启用 2.4G + 5G SSID 按你的命名： 2.4G：Xiaomi_zjw (看频段) 5G：Xiaomi_zjw_5G（看频段） 重要：你当前光猫是 192.168.1.1，而 ImmortalWrt 首次进入默认常见是 192.168.1.1，会冲突；所以第 2 步把小米 LAN 改到 192.168.31.1（或其它不冲突网段）是关键。\n5.6 验收（模式 A 是否配置成功） 用两台设备分别测试（最直观）：\n设备 A（连光猫 Wi‑Fi）： IP 应该是光猫网段（例如 192.168.1.x） 网关应是光猫（例如 192.168.1.1） 设备 B（连小米 Wi‑Fi 或 LAN）： IP 应该是 192.168.31.x 网关应是 192.168.31.1 能正常上网（先测 ping 114.114.114.114，再测 DNS 解析） 5.7 常见坑（模式 A） 双 DHCP：如果你把小米 LAN 口接到了光猫 LAN（而不是 WAN），容易出现网络里两个 DHCP；模式 A 固定用“光猫 LAN → 小米 WAN”。 网段冲突：光猫和小米都用 192.168.1.1 会抢网关；务必把小米 LAN 改到 192.168.31.1 或其它网段。 SSID 混淆：建议光猫和小米 SSID 命名明显区分，避免连错导致“怎么不一样”的错觉。 第 6 步：模式 B（主路由拨号/主路由体验） 6.0 判定 PPPoE passthrough/多拨是否可用（不改桥接前提） 你当前不改光猫桥接，所以这里做一个“实测判定”：\n接线：光猫 LAN → 小米 WAN LuCI：网络 → 接口 → WAN → 编辑 协议：PPPoE 填入：宽带账号/密码 保存\u0026应用 等待 30~60 秒，看 WAN 状态： 拨号成功：WAN 显示 PPPoE 分配的地址并能上网 → 进入 B1 拨号失败/超时：多半是不支持 passthrough/多拨 → 进入 B2 判定小技巧（更稳）：\n若 WAN IPv4 是 10.x / 172.16-31.x / 192.168.x，一般就是私网（更像 B2） 若 WAN 是私网且你查询到的“外网 IP”明显不同，基本就是双 NAT（B2） 6.1 B1：PPPoE 成功（理想） WAN：PPPoE（保持） LAN：你的内网网段（例如 192.168.31.1/24） DHCP/Wi‑Fi：开启 建议：\n尽量让设备只连接小米（避免“同一个家里两套路由并存”造成路径混乱）。 若光猫 Wi‑Fi 必须开着，至少把 SSID 命名区分明显，避免连错。 6.2 B2：PPPoE 不可用（常见） WAN：DHCP（从光猫拿到私网地址） 小米继续提供 DHCP/Wi‑Fi（主路由体验），但本质是 双重 NAT 这种情况下，你“主路由体验”是有的（设备都连小米），但：\n一些需要入站端口/远程访问的场景会更麻烦（需要在光猫和小米两边都做端口映射） 某些游戏/语音/点对点应用可能更挑网络 可选优化（如果你能操作光猫管理页）：\nDMZ：把光猫 DMZ 指向“小米 WAN 获取到的地址” 优点：你只需要在小米上做端口转发，光猫层面基本不用再配 风险：等同把小米暴露在光猫之后，务必关掉不需要的管理入口、保持系统更新、强密码 可选：DNS 加速 + 网络稳定性优化（推荐做） 本节只做“上网体验/稳定性”优化，不依赖任何代理类插件；建议在你完成模式 A/B 并能正常上网后再做。\nDNS 加速（dnsmasq 缓存 + 指定上游） LuCI：网络 → DHCP/DNS\nDNS 转发（上游 DNS）：建议填 2 个稳定的公共 DNS（示例） 223.5.5.5 119.29.29.29 DNS 缓存大小：建议 10000（家用足够） 可选（更“强制”一点，避免被上联下发 DNS 覆盖）：\nLuCI：网络 → 接口 → WAN → 编辑 → 高级设置 勾选 忽略此接口的 DNS 服务器（Ignore DNS server advertised by peer） 验证（在路由器上执行）：\nnslookup www.baidu.com nslookup www.qq.com 网络加速/稳定性（流量分载） LuCI：网络 → 防火墙 → 常规设置\n软件流量分载（Software flow offloading）：开启 硬件流量分载（Hardware flow offloading）：有的话再开启 提示：开启后大流量转发 CPU 占用会下降、吞吐更稳；但极少数插件/特殊场景可能与分载有冲突，遇到异常可先关闭验证。\nWi‑Fi 稳定性建议（家用最常见的几条） LuCI：网络 → 无线\n2.4G：建议固定信道为 1/6/11 之一，带宽优先 20MHz（更稳） 5G：优先选择非 DFS 常用信道（减少因雷达检测导致的断流/换信道） SSID 按你的命名：Xiaomi_zjw（2.4G）/ Xiaomi_zjw_5G（5G） 验证（终端）：\n# 用 curl 测真实联网（比 ping 更可靠，很多网络会屏蔽 ICMP） curl -I https://www.baidu.com 第 7 步：USB3.0 扩展（挂载 + extroot + NAS/下载机） 7.0 先选一种用法（强烈建议先看完再动手） 第 7 步不是必须的。 如果你当前目标只是：刷机成功 + 旁路由/主路由模式正常上网（含代理/分流），完全可以先跳过第 7 步。 等你以后确实需要用 USB3.0 挂硬盘（做 NAS/下载机，或觉得插件空间不够才想 extroot）时，再回来按第 7 步做就行。 小米路由器 3G（R3G）日常当路由/旁路由是够用的，但要不要长期挂外置盘，取决于你要跑多“重”的功能。 硬件大概够不够 内存（RAM）：一般是 256MB 够：普通拨号/DHCP/NAT、Wi‑Fi、基础科学上网（单一代理内核+少量规则）、轻量 DNS 去广告 紧张：多插件并发（OpenClash 大规则/大订阅、复杂分流、下载机+NAS 同开、日志/监控一堆） 机身存储（Flash/NAND）：一般 128MB 够：干净系统 + 少量插件 容易满：装很多 LuCI 插件、代理套件、adblock 规则很大、下载机/媒体服务等\n本节分 3 种情况，你只需要选一种做（不要混着做）：\n情况 1：只挂载数据盘（不做 extroot）（推荐大多数人）\n使用场景：你主要想要 NAS/下载机/存储共享；路由器本体（网络、插件、配置）不依赖硬盘。\n建议：最稳、最少坑。硬盘不是“系统必需品”，拔掉也不影响路由器基本工作。\n要做的操作：\n做到：7.3、7.4、7.5 不要做：7.6（extroot） 情况 2：extroot（把 /overlay 迁移到 USB）\n使用场景：你要装较多插件/规则，担心内部 NAND 空间不够或写入过多；愿意让 USB 盘长期连接。\n建议：extroot 启用后，USB 盘应当长期插着。拔掉后系统可能回退到内部 NAND 的 overlay，导致“插件/配置像没了”。\n要做的操作：\n做到：7.3、7.4、7.5、7.6 情况 3：extroot + 数据盘服务（NAS/下载机长期运行）（偏重度玩法）\n使用场景：你既要大量插件（extroot），又要长期跑 Samba/aria2 等服务，并把数据放在数据盘分区。\n建议：\n外置硬盘务必供电稳定（尽量用带电源盒子/稳定供电的移动硬盘），避免因掉电/松动导致 extroot 异常。 数据目录放数据盘（例如 /mnt/sda2/），系统/插件放 extroot 分区（/overlay）。 要做的操作：\n做到：7.3、7.4、7.5、7.6 然后按需做：7.7（NAS）、7.8（下载机） 7.1 为什么建议 extroot OpenWrt 系系统装插件会写入 /overlay（NAND）。用 extroot 把 /overlay 迁移到 USB 存储：\n空间更大 减少 NAND 写入，更耐用 7.2 分区建议（推荐） 分区 1：ext4（extroot，建议 4~8GB 或更大） 分区 2：ext4（数据盘：NAS/下载） 可选：swap（512MB~2GB，按插件规模） 重要：macOS 原生不方便直接格式化 ext4。最稳妥做法是：在路由器上分区+格式化（下面给可照抄命令）。\n7.3 安装 USB/文件系统组件（路由器上执行） SSH 登录 ImmortalWrt 后执行：\nopkg update # USB/存储/分区工具 opkg install kmod-usb-storage kmod-usb3 kmod-usb2 kmod-scsi-core \\ block-mount fdisk lsblk # ext4 + 工具 opkg install kmod-fs-ext4 e2fsprogs # 可选：FAT/NTFS（你若要临时读写U盘/移动硬盘） opkg install kmod-fs-vfat dosfstools # 可选：swap opkg install swap-utils 插入你的 USB3.0 硬盘/U 盘后，确认识别：\nlsblk block info dmesg | tail -n 50 下面示例默认你的盘是 /dev/sda。如果你看到的是 /dev/sdb，请把命令里的 sda 全部替换。\n7.4 分区与格式化（路由器上执行，注意会清空数据） DISK=/dev/sda # 1) 用 fdisk 分区：创建 sda1(extroot) + sda2(data) + (可选)sda3(swap) fdisk \"$DISK\" 进入 fdisk 后按顺序输入（一步一步照抄，大小你可自行调整）：\ng（新建 GPT 分区表；如果你更喜欢 MBR，可用 o，但 GPT 更通用） n → 分区 1（extroot） 分区号：1 起始扇区：直接回车 结束扇区：例如 +8G n → 分区 2（数据盘） 分区号：2 起始扇区：回车 结束扇区：回车（用掉剩余空间；如果你要 swap，则给数据盘留一点） （可选）n → 分区 3（swap） 分区号：3 起始扇区：回车 结束扇区：例如 +1G w（写入并退出） 分区完成后格式化：\nmkfs.ext4 -F -L extroot /dev/sda1 mkfs.ext4 -F -L data /dev/sda2 # 可选 swap mkswap -L swap /dev/sda3 2\u003e/dev/null || true 7.5 自动挂载（fstab） # 生成 fstab block detect \u003e /etc/config/fstab # 启用自动挂载（把前两个 mount 的 enabled 改为 1；如有多个条目，按需修改） uci set fstab.@mount[0].enabled='1' uci set fstab.@mount[1].enabled='1' uci commit fstab /etc/init.d/fstab enable /etc/init.d/fstab restart mount | grep -E 'sda1|sda2' || true 建议你在 LuCI：系统 → 挂载点 里再确认一次 UUID/挂载点是否正确。\n7.6 配置 extroot（把 /overlay 迁移到 USB） 只在你选择了上面第 2/3 种情况时执行；如果你只想“挂载数据盘”，请跳过本节。\n先把 extroot 分区临时挂载到一个目录（示例 /mnt/extroot）： mkdir -p /mnt/extroot mount /dev/sda1 /mnt/extroot 把当前 overlay 内容拷贝过去： tar -C /overlay -cvf - . | tar -C /mnt/extroot -xvf - sync 配置把 /dev/sda1 挂载到 /overlay（推荐用 UUID）： blkid /dev/sda1 在 /etc/config/fstab（或 LuCI 挂载点）里把 sda1 对应条目改成：\n目标（target）：/overlay 启用（enabled）：1 重启： reboot 重启后验证：\ndf -h | grep -E 'overlay|/dev/sda' mount | grep overlay 若看到 overlay 来自 /dev/sda1，extroot 生效。\n7.7 可选：NAS（Samba4） opkg update opkg install luci-app-samba4 samba4-server LuCI：服务 → 网络共享（Samba4）\n共享目录建议放在数据盘（例如 /mnt/sda2/share） 账号/权限按家庭需求配置（不建议匿名写入） 7.8 可选：下载机（aria2） opkg update opkg install luci-app-aria2 aria2 下载目录同样建议放在数据盘（例如 /mnt/sda2/downloads）。\n第 8 步：手动切换清单（A ↔ B） A → B 接线（两种模式都保持一致，减少插线错误）：光猫 LAN → 小米 WAN 切换 WAN 协议（LuCI：网络 → 接口 → WAN → 编辑）： 先尝试 PPPoE（填账号/密码）→ 保存\u0026应用 观察 30~60 秒： 成功：进入 B1 失败/超时：改回 DHCP 客户端 → 进入 B2 验收（建议按顺序）：\nLuCI：状态 → 概览 → WAN B1：应显示 PPPoE 已连接，且 WAN 地址通常不是 192.168.x.x B2：应显示 DHCP 获取到私网地址（常见 192.168.x.x） 终端（可选，SSH 登录路由器后）： ip a show dev wan ip route ping -c 3 114.114.114.114 nslookup openwrt.org 114.114.114.114 常见坑（A→B）：\nPPPoE 一直失败：大概率光猫不支持 passthrough/多拨 → 直接切 B2（DHCP） 浏览器进不了 LuCI：多为缓存/网段冲突，建议固定电脑 IP、换浏览器或无痕模式 两边都开 DHCP：模式 B 下“光猫仍在路由模式”时，尽量不要让设备再连光猫 Wi‑Fi，避免网络混乱 B → A WAN 统一切回 DHCP 客户端（LuCI：网络 → 接口 → WAN） LAN 网段保持不变（你这里用 192.168.31.1/24 即可，前提是光猫不是 31 段） 设备按需连接： 需要策略网络：连小米 只要国内网络：连光猫 验收（B→A）：\n设备连小米：拿到 192.168.31.x，网关 192.168.31.1，能上网 设备连光猫：继续拿到光猫网段地址（例如 192.168.1.x），能上网 常见坑（B→A）：\n把光猫 LAN 插到了小米 LAN：容易出现双 DHCP；模式 A 固定“光猫 LAN → 小米 WAN” 网段冲突：光猫如果是 192.168.1.1，小米 LAN 必须避开 192.168.1.1（例如用 192.168.31.1） 救砖/回滚（不拆机） USB 恢复回原厂稳定版 U 盘 FAT32 把原厂稳定版复制到 U 盘根目录并重命名为 miwifi.bin miwifi_r3g_firmware_9be74_2.28.44.bin 按住 Reset 上电进入恢复刷回 建议的“救砖前检查”：\n先用网线直连路由器 LAN，看看电脑能不能拿到地址、能不能 ping 192.168.1.1（或你改过的 LAN IP）。 如果完全没反应/频繁重启/管理页打不开，优先走 USB 恢复，成功率最高。 USB 恢复要点（更小白一点）：\nU 盘不要太大、不要带奇怪分区（8~32GB 的普通 U 盘最省心） 根目录只放 miwifi.bin，不要放其它文件 进入恢复后耐心等 5~10 分钟（不要中途断电） 分区恢复（需要你有备份） 适用场景：你还能 SSH 进设备（或至少还能进入某个可执行命令的系统），想把关键分区恢复回备份状态。\n思路：\n把你在第 3.1 步备份的文件拷回路由器（例如 /tmp/restore/） 对照 backup/proc_mtd.txt 找到分区名 使用 mtd write 写回（分区名必须完全匹配） 示例（仅示意，按你的备份文件名/分区名调整）：\nmkdir -p /tmp/restore cd /tmp/restore # 假设你拷进来了：mtd0_bootloader.bin / mtd2_factory.bin ... # 写回示例（高风险！写错会直接变砖！） # mtd write mtd0_bootloader.bin bootloader # mtd write mtd2_factory.bin factory 重要警告：bootloader/u-boot 一类分区写错基本“直接硬砖”。如果你不确定，宁可只用 USB 恢复回原厂。\n最后兜底（不在本文展开）：TTL 串口（需要拆机/接线），仅作为你愿意折腾时的最后手段。\n验收清单 模式 A：小米 WAN（DHCP）可上网；小米 LAN/Wi‑Fi 正常；与光猫网络可区分使用 模式 B： B1：PPPoE 拨号成功（若光猫支持） B2：DHCP 上联稳定（双 NAT），主路由体验满足 USB3.0：挂载稳定；若启用 extroot，重启后仍生效 相关阅读 若你更关心「科学上网」拓扑与快速上手，可先看：《小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战》 ",
+  "wordCount" : "1744",
+  "inLanguage": "en",
+  "image": "https://maquren.top/img/og-cover.png","datePublished": "2026-02-26T00:00:00Z",
+  "dateModified": "2026-02-27T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": {"email":"zhangjiawei@maquren.top","name":"maquren"}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A83g%E5%AE%8C%E7%BE%8E%E8%A7%A3%E9%94%81/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "maquren(码趣人) - 有趣的编码世界",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://maquren.top/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://maquren.top/" accesskey="h" title="maquren(码趣人) - 有趣的编码世界 (Alt + H)">maquren(码趣人) - 有趣的编码世界</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://maquren.top/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://maquren.top/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://maquren.top/">Home</a>&nbsp;»&nbsp;<a href="https://maquren.top/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      小米路由器 3G 完美解锁：ImmortalWrt 刷机与旁路由/主路由双模式
+    </h1>
+    <div class="post-description">
+      小米路由器 3G（R3G）从开发版到 SSH、刷入 ImmortalWrt，旁路由/主路由双模式配置，USB 扩展与救砖回滚完整步骤。
+    </div>
+    <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>9 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="说明">说明<a hidden class="anchor" aria-hidden="true" href="#说明">#</a></h2>
+<p>本文面向 <strong>小米路由器 3G（R3G / MIR3G / xiaomi_mi-router-3g）</strong>，目标是刷入基于 OpenWrt 的系统（本文以 <strong>ImmortalWrt 稳定版</strong>为主），并实现：</p>
+<ul>
+<li><strong>模式 A（旁路由/二级路由）</strong>：设备连接小米 3G（Wi‑Fi/有线）→ 走“策略网络”；设备连接光猫（Wi‑Fi/有线）→ 走“普通国内网络”。</li>
+<li><strong>模式 B（主路由）</strong>：小米 3G 尽量支持作为主路由工作；若光猫不桥接且不支持 PPPoE passthrough/多拨，则退化为“双重 NAT 的主路由体验”。</li>
+<li><strong>USB3.0 扩展</strong>：挂载 U 盘/移动硬盘，做 <strong>extroot（扩容）</strong>、插件仓库、NAS、下载机等。</li>
+</ul>
+<blockquote>
+<p>合规提示：本文只提供<strong>设备刷机、网络基础配置、存储与服务</strong>的通用方法。涉及“代理/隧道/VPN 等跨境访问”用途，请务必遵守当地法律法规与运营商条款；本文不会提供绕过监管的具体操作指导。</p>
+</blockquote>
+<hr>
+<h2 id="项目目录结构你电脑上的仓库">项目目录结构（你电脑上的仓库）<a hidden class="anchor" aria-hidden="true" href="#项目目录结构你电脑上的仓库">#</a></h2>
+<ul>
+<li><code>xiaomi3G_openwrt/tools/macos/</code>：macOS 侧可能用到的工具/下载产物</li>
+<li><code>xiaomi3G_openwrt/shell_script/macos/</code>：macOS 侧脚本（下载、校验）</li>
+</ul>
+<hr>
+<h2 id="你需要准备什么">你需要准备什么<a hidden class="anchor" aria-hidden="true" href="#你需要准备什么">#</a></h2>
+<h3 id="硬件">硬件<a hidden class="anchor" aria-hidden="true" href="#硬件">#</a></h3>
+<ul>
+<li>网线 ×1（强烈建议全程有线）</li>
+<li>U 盘（FAT32）×1（≥1GB；用于“U 盘恢复刷机/存放镜像/备份”）</li>
+<li>USB3.0 移动硬盘或大容量 U 盘 ×1（建议 ≥32GB；用于 extroot + 数据盘）</li>
+<li>手机（用于 Mi WiFi App 绑定小米账号）</li>
+</ul>
+<h3 id="账号软件">账号/软件<a hidden class="anchor" aria-hidden="true" href="#账号软件">#</a></h3>
+<ul>
+<li>小米账号（用于下载 <code>miwifi_ssh.bin</code>、获取 root 密码）</li>
+<li>macOS 终端（自带 <code>ssh</code>、<code>scp</code>、<code>curl</code>、<code>shasum</code>）</li>
+</ul>
+<hr>
+<h2 id="重要概念先看少踩坑">重要概念（先看，少踩坑）<a hidden class="anchor" aria-hidden="true" href="#重要概念先看少踩坑">#</a></h2>
+<h3 id="1为什么要开发版--ssh--写入-immortalwrt">1）为什么要“开发版 → SSH → 写入 ImmortalWrt”<a hidden class="anchor" aria-hidden="true" href="#1为什么要开发版--ssh--写入-immortalwrt">#</a></h3>
+<p>小米原厂固件默认不开放 SSH。常见可行流程是：</p>
+<ol>
+<li>通过 <strong>U 盘恢复</strong>刷入 <strong>开发版固件</strong></li>
+<li>绑定到小米账号后，从官方页面下载 <strong><code>miwifi_ssh.bin</code></strong> 并获得 root 密码</li>
+<li>再次通过 <strong>U 盘恢复</strong>刷入 <code>miwifi_ssh.bin</code>，开启 SSH</li>
+<li>SSH 登录后，把 ImmortalWrt 写入 NAND 指定分区（<code>kernel1</code> / <code>rootfs0</code>）</li>
+</ol>
+<h3 id="2为何不改桥接时-pppoe-可能失败">2）为何“不改桥接”时 PPPoE 可能失败<a hidden class="anchor" aria-hidden="true" href="#2为何不改桥接时-pppoe-可能失败">#</a></h3>
+<p>PPPoE 通常需要二层透传（桥接）或光猫支持 <strong>PPPoE passthrough/多拨</strong>。你目前“不想/不能桥接光猫”，所以模式 B 分两种：</p>
+<ul>
+<li><strong>B1（理想）</strong>：光猫支持 PPPoE passthrough/多拨 → 小米 WAN 可 PPPoE 成功</li>
+<li><strong>B2（常见）</strong>：光猫不支持且不桥接 → 小米无法 PPPoE，只能 DHCP 上联（双重 NAT）</li>
+</ul>
+<hr>
+<h2 id="固件与资源下载强烈建议先下载完并校验">固件与资源下载（强烈建议先下载完并校验）<a hidden class="anchor" aria-hidden="true" href="#固件与资源下载强烈建议先下载完并校验">#</a></h2>
+<h3 id="1一键下载与校验macos">1）一键下载与校验（macOS）<a hidden class="anchor" aria-hidden="true" href="#1一键下载与校验macos">#</a></h3>
+<p>在仓库根目录执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>bash xiaomi3G_openwrt/shell_script/macos/download_firmware.sh
+</span></span><span style="display:flex;"><span>bash xiaomi3G_openwrt/shell_script/macos/verify_immortalwrt_sha256.sh
+</span></span></code></pre></div><p>下载产物默认在：</p>
+<ul>
+<li><code>xiaomi3G_openwrt/tools/macos/downloads/</code></li>
+</ul>
+<h3 id="2本文使用的关键下载链接可手动下载">2）本文使用的关键下载链接（可手动下载）<a hidden class="anchor" aria-hidden="true" href="#2本文使用的关键下载链接可手动下载">#</a></h3>
+<h4 id="immortalwrt用于刷机">ImmortalWrt（用于刷机）<a hidden class="anchor" aria-hidden="true" href="#immortalwrt用于刷机">#</a></h4>
+<ul>
+<li>目录（含 <code>sha256sums</code>）：<code>https://mirrors.ustc.edu.cn/immortalwrt/releases/24.10.4/targets/ramips/mt7621/</code></li>
+<li>R3G 写入分区用文件：
+<ul>
+<li><code>immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin</code></li>
+<li><code>immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin</code></li>
+</ul>
+</li>
+<li>R3G 后续升级用文件：
+<ul>
+<li><code>immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-sysupgrade.bin</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="小米原厂固件用于开发版救砖回滚">小米原厂固件（用于开发版/救砖回滚）<a hidden class="anchor" aria-hidden="true" href="#小米原厂固件用于开发版救砖回滚">#</a></h4>
+<p>（来源索引页：<code>https://mirom.ezbox.idv.tw/en/miwifi/R3G/</code>）</p>
+<ul>
+<li>
+<p><strong>重要：先分清“开发版”与“稳定版”</strong></p>
+<ul>
+<li><strong>开发版</strong>：用于开启 SSH（后续刷 ImmortalWrt 必经）</li>
+<li><strong>稳定版</strong>：用于救砖/回滚（让路由器恢复到原厂可用状态）</li>
+</ul>
+</li>
+<li>
+<p>稳定版（救砖回滚用，最新稳定）：</p>
+<ul>
+<li><code>https://bigota.miwifi.com/xiaoqiang/rom/r3g/miwifi_r3g_firmware_9be74_2.28.44.bin</code></li>
+</ul>
+</li>
+<li>
+<p>（可选）稳定版（备份你当前正在用的版本：2.28.24）：</p>
+<ul>
+<li><code>https://bigota.miwifi.com/xiaoqiang/rom/r3g/miwifi_r3g_firmware_26d93_2.28.24.bin</code></li>
+<li>用途：如果你后续想<strong>回到你现在这版</strong>（而不是 2.28.44），就用它做 U 盘恢复回滚。</li>
+</ul>
+</li>
+<li>
+<p>开发版（走 SSH 流程用，最新开发）：</p>
+<ul>
+<li><code>https://bigota.miwifi.com/xiaoqiang/rom/r3g/miwifi_r3g_firmware_12f97_2.25.124.bin</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="miwifi_sshbin需要登录小米账号"><code>miwifi_ssh.bin</code>（需要登录小米账号）<a hidden class="anchor" aria-hidden="true" href="#miwifi_sshbin需要登录小米账号">#</a></h4>
+<ul>
+<li>获取入口：<code>https://d.miwifi.com/rom/ssh</code></li>
+</ul>
+<blockquote>
+<p>该页面常见问题：URL 可能被页面脚本改成 <code>http</code> 导致打不开，手动改回 <code>https</code> 即可。</p>
+</blockquote>
+<hr>
+<h2 id="模式与接线">模式与接线<a hidden class="anchor" aria-hidden="true" href="#模式与接线">#</a></h2>
+<h3 id="刷机解锁阶段建议接线先看少踩坑">刷机/解锁阶段建议接线（先看，少踩坑）<a hidden class="anchor" aria-hidden="true" href="#刷机解锁阶段建议接线先看少踩坑">#</a></h3>
+<p>为了避免网段冲突、DHCP 干扰、以及误插 WAN 口导致“电脑拿不到 IP”，建议你按阶段接线：</p>
+<ul>
+<li>
+<p><strong>阶段 1：第 1~3 步（刷开发版 / 刷 miwifi_ssh.bin / SSH 写入 ImmortalWrt）</strong></p>
+<ul>
+<li><strong>光猫</strong>：先<strong>不连接</strong>（小米 WAN 口保持空着）</li>
+<li><strong>电脑</strong>：网线直连小米 <strong>LAN 口</strong>（不要插 WAN）</li>
+<li><strong>U 盘</strong>：只在“U 盘恢复刷机/写入”那一刻插入；完成后就拔掉（下面各步骤会再次提醒）</li>
+</ul>
+</li>
+<li>
+<p><strong>阶段 2：进入 ImmortalWrt 后配置模式 A/B（第 5~6 步）</strong></p>
+<ul>
+<li><strong>光猫 LAN → 小米 WAN 口</strong></li>
+<li>设备按需连接小米（走策略网络）或光猫（走国内网络）</li>
+</ul>
+</li>
+</ul>
+<h3 id="模式-a旁路由二级路由推荐日常">模式 A：旁路由/二级路由（推荐日常）<a hidden class="anchor" aria-hidden="true" href="#模式-a旁路由二级路由推荐日常">#</a></h3>
+<ul>
+<li>光猫：保持拨号/NAT/DHCP/Wi‑Fi（国内网络）</li>
+<li>小米（ImmortalWrt）：做二级路由（你把需要“策略网络”的设备连到小米）</li>
+</ul>
+<p>接线：</p>
+<ul>
+<li>光猫 LAN → 小米 <strong>WAN 口</strong></li>
+<li>设备 → 小米（Wi‑Fi/有线）</li>
+</ul>
+<h3 id="模式-b主路由按需切换">模式 B：主路由（按需切换）<a hidden class="anchor" aria-hidden="true" href="#模式-b主路由按需切换">#</a></h3>
+<p>你希望“需要的时候手动切换”，因此仍推荐接线保持一致：</p>
+<ul>
+<li>光猫 LAN → 小米 <strong>WAN 口</strong></li>
+</ul>
+<p>只在 ImmortalWrt 里切换 WAN 协议：</p>
+<ul>
+<li>尝试 PPPoE（B1）</li>
+<li>失败则改回 DHCP（B2）</li>
+</ul>
+<hr>
+<h2 id="第-1-步刷入小米开发版固件u-盘恢复">第 1 步：刷入小米“开发版固件”（U 盘恢复）<a hidden class="anchor" aria-hidden="true" href="#第-1-步刷入小米开发版固件u-盘恢复">#</a></h2>
+<h3 id="11-制作-u-盘fat32--miwifibin">1.1 制作 U 盘（FAT32 + miwifi.bin）<a hidden class="anchor" aria-hidden="true" href="#11-制作-u-盘fat32--miwifibin">#</a></h3>
+<ol>
+<li>U 盘格式化为 <strong>FAT32</strong>（你可以用 macOS“磁盘工具”图形界面完成）</li>
+<li>把开发版固件复制到 U 盘根目录，并重命名为 <strong><code>miwifi.bin</code></strong>
+<ul>
+<li>原文件：<code>miwifi_r3g_firmware_12f97_2.25.124.bin</code></li>
+<li><strong>不要拿稳定版（2.28.xx）来做这一步</strong>：稳定版不用于开启 SSH</li>
+</ul>
+</li>
+</ol>
+<h3 id="12-进入-u-盘恢复刷机">1.2 进入 U 盘恢复刷机<a hidden class="anchor" aria-hidden="true" href="#12-进入-u-盘恢复刷机">#</a></h3>
+<ol>
+<li>路由器断电</li>
+<li>U 盘插入路由器 USB 口</li>
+<li><strong>按住 Reset</strong> 不放，上电</li>
+<li>看到指示灯进入刷机/恢复状态（通常黄灯闪烁/呼吸）后松开 Reset</li>
+<li>等待数分钟直到完成并重启</li>
+</ol>
+<blockquote>
+<p>建议：本阶段先不要连接光猫；刷机完成、蓝灯稳定后，把 <strong>U 盘拔掉</strong> 再进行初始化。</p>
+</blockquote>
+<h3 id="13-初次初始化网页端">1.3 初次初始化（网页端）<a hidden class="anchor" aria-hidden="true" href="#13-初次初始化网页端">#</a></h3>
+<p>电脑接入小米路由器 LAN（或 Wi‑Fi），打开管理页完成初始化（管理员密码/Wi‑Fi 名称）。</p>
+<hr>
+<h2 id="第-2-步绑定小米账号并安装-sshmiwifi_sshbin">第 2 步：绑定小米账号并安装 SSH（<code>miwifi_ssh.bin</code>）<a hidden class="anchor" aria-hidden="true" href="#第-2-步绑定小米账号并安装-sshmiwifi_sshbin">#</a></h2>
+<h3 id="21-绑定路由器到小米账号">2.1 绑定路由器到小米账号<a hidden class="anchor" aria-hidden="true" href="#21-绑定路由器到小米账号">#</a></h3>
+<ol>
+<li>手机连接小米路由器 Wi‑Fi</li>
+<li>打开 Mi WiFi App，登录小米账号</li>
+<li>按引导把路由器绑定到账号</li>
+</ol>
+<h3 id="22-下载-miwifi_sshbin-并获取-root-密码">2.2 下载 <code>miwifi_ssh.bin</code> 并获取 root 密码<a hidden class="anchor" aria-hidden="true" href="#22-下载-miwifi_sshbin-并获取-root-密码">#</a></h3>
+<ol>
+<li>用浏览器打开：<code>https://d.miwifi.com/rom/ssh</code></li>
+<li>登录小米账号后按页面提示操作</li>
+<li>下载得到 <code>miwifi_ssh.bin</code></li>
+<li>页面会给出 root 密码（或生成与序列号相关的密码）——务必保存</li>
+</ol>
+<h3 id="23-用-u-盘恢复刷入-miwifi_sshbin">2.3 用 U 盘恢复刷入 <code>miwifi_ssh.bin</code><a hidden class="anchor" aria-hidden="true" href="#23-用-u-盘恢复刷入-miwifi_sshbin">#</a></h3>
+<ol>
+<li>U 盘根目录<strong>只放</strong> <code>miwifi_ssh.bin</code>（不要再放 <code>miwifi.bin</code>）</li>
+<li>重复“按住 Reset 上电 → 等待完成”的 U 盘恢复流程</li>
+</ol>
+<blockquote>
+<p>强烈建议：执行完成、蓝灯稳定后 <strong>拔掉 U 盘</strong> 再重启一次路由器，然后再做 2.4（避免 U 盘残留触发重复流程/影响排错）。</p>
+</blockquote>
+<h3 id="24-ssh-登录验证">2.4 SSH 登录验证<a hidden class="anchor" aria-hidden="true" href="#24-ssh-登录验证">#</a></h3>
+<ol>
+<li>电脑接入小米路由器 LAN</li>
+<li>终端执行（开发版 LAN 侧常见为 <code>192.168.31.1</code>）：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># macOS 新版 OpenSSH 可能不兼容小米开发版的旧算法，推荐用下面这条（你已实测可用）</span>
+</span></span><span style="display:flex;"><span>ssh <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oKexAlgorithms<span style="color:#f92672">=</span>diffie-hellman-group14-sha1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oHostKeyAlgorithms<span style="color:#f92672">=</span>ssh-rsa <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  root@192.168.31.1
+</span></span></code></pre></div><ol start="3">
+<li>输入第 2.2 步获得的 root 密码</li>
+</ol>
+<p>能登录即表示 SSH 已就绪。</p>
+<hr>
+<h2 id="第-3-步刷入-immortalwrt写入-kernel1--rootfs0">第 3 步：刷入 ImmortalWrt（写入 <code>kernel1</code> / <code>rootfs0</code>）<a hidden class="anchor" aria-hidden="true" href="#第-3-步刷入-immortalwrt写入-kernel1--rootfs0">#</a></h2>
+<blockquote>
+<p>这是最关键步骤：会写 NAND。强烈建议先备份分区。</p>
+</blockquote>
+<p>接线建议（本步骤期间）：</p>
+<ul>
+<li><strong>光猫</strong>：先不连接（小米 WAN 口保持空着）</li>
+<li><strong>电脑</strong>：网线直连小米 <strong>LAN 口</strong></li>
+<li><strong>U 盘</strong>：仅用于“备份分区/存放镜像/写入”，完成后建议拔掉</li>
+</ul>
+<h3 id="31-备份分区建议必做">3.1 备份分区（建议必做）<a hidden class="anchor" aria-hidden="true" href="#31-备份分区建议必做">#</a></h3>
+<ol>
+<li>插入 U 盘（FAT32）到路由器 USB 口</li>
+<li>SSH 登录后查看分区表：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat /proc/mtd
+</span></span></code></pre></div><blockquote>
+<p>你这台 R3G 的分区表（你已实测）里，关键分区名如下：</p>
+<ul>
+<li><code>kernel1</code>：mtd9</li>
+<li><code>rootfs0</code>：mtd10</li>
+</ul>
+<p>后续写入 ImmortalWrt 时会用到的就是这两个“分区名”（不是 mtd 编号）。</p>
+</blockquote>
+<ol start="3">
+<li>找到 U 盘挂载点（不同固件可能不同）：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mount
+</span></span><span style="display:flex;"><span>df -h
+</span></span></code></pre></div><blockquote>
+<p>你当前环境里 U 盘识别为 <code>/dev/sda1</code>，挂载在 <strong><code>/extdisks/sda1</code></strong>（你已实测）。
+下面示例就以 <code>USB=/extdisks/sda1</code> 为准。</p>
+</blockquote>
+<ol start="4">
+<li>备份（推荐：<strong>把所有 mtd 分区都备份一份</strong>，最省心）：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>USB<span style="color:#f92672">=</span>/extdisks/sda1
+</span></span><span style="display:flex;"><span>mkdir -p <span style="color:#e6db74">&#34;</span>$USB<span style="color:#e6db74">/backup/mtd&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 记录分区表和关键启动变量（排查/回滚会用到）</span>
+</span></span><span style="display:flex;"><span>cat /proc/mtd &gt; <span style="color:#e6db74">&#34;</span>$USB<span style="color:#e6db74">/backup/proc_mtd.txt&#34;</span>
+</span></span><span style="display:flex;"><span>nvram show &gt; <span style="color:#e6db74">&#34;</span>$USB<span style="color:#e6db74">/backup/nvram_show.txt&#34;</span> 2&gt;/dev/null <span style="color:#f92672">||</span> true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 备份所有分区（跳过 /proc/mtd 表头）</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意：小米开发版环境用的是 /bin/ash，可能不支持 bash 的 “done &lt; &lt;(…)” 进程替换写法；</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 同时某些分区（例如你这里的 mtd14 &#34;data&#34;）正在被系统挂载使用，会出现 “Device or resource busy”，属于正常现象。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 处理原则：</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># - 先保证把关键分区（尤其是 bootloader/factory/kernel/rootfs）备份到位</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># - 对于 busy 的分区：记录 WARN 并跳过即可（你已经备份了 mtd0 &#34;ALL&#34; 时更不影响救砖）</span>
+</span></span><span style="display:flex;"><span>tail -n +2 /proc/mtd | <span style="color:#66d9ef">while</span> read -r dev size erasesize name; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># dev: mtd0:</span>
+</span></span><span style="display:flex;"><span>  dev<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>dev%:<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># name: &#34;bootloader&#34;</span>
+</span></span><span style="display:flex;"><span>  name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>name%<span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>name#<span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#e6db74">&#34;backup </span>$dev<span style="color:#e6db74"> -&gt; </span><span style="color:#e6db74">${</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">.bin&#34;</span>
+</span></span><span style="display:flex;"><span>  dd <span style="color:#66d9ef">if</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/dev/</span><span style="color:#e6db74">${</span>dev<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> of<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$USB<span style="color:#e6db74">/backup/mtd/</span><span style="color:#e6db74">${</span>dev<span style="color:#e6db74">}</span><span style="color:#e6db74">_</span><span style="color:#e6db74">${</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">.bin&#34;</span> <span style="color:#f92672">||</span> echo <span style="color:#e6db74">&#34;[WARN] skip </span><span style="color:#e6db74">${</span>dev<span style="color:#e6db74">}</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">${</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">)&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sync
+</span></span><span style="display:flex;"><span>ls -lh <span style="color:#e6db74">&#34;</span>$USB<span style="color:#e6db74">/backup/mtd&#34;</span> | head
+</span></span></code></pre></div><blockquote>
+<p>可选：如果你想把“data（/data）里的内容”也备份一份（不碰 raw 分区，最安全），可以打包目录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>tar -C / -czf <span style="color:#e6db74">&#34;</span>$USB<span style="color:#e6db74">/backup/data_dir.tgz&#34;</span> data
+</span></span><span style="display:flex;"><span>sync
+</span></span></code></pre></div></blockquote>
+<blockquote>
+<p>说明：这里用 <code>tail -n +2</code> 跳过 <code>/proc/mtd</code> 第一行表头。若你的系统没有 <code>tail -n +2</code>，可改成 <code>sed '1d' /proc/mtd</code>。</p>
+</blockquote>
+<ol start="5">
+<li>把备份拷回电脑（macOS）长期保存：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 先确认U盘挂载点，再把备份目录拷到电脑当前目录</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 说明：macOS 新版 OpenSSH 的 scp 默认走 SFTP；而小米开发版环境可能缺少 sftp-server，</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 会报 “/usr/libexec/sftp-server: not found”。用 -O 强制走旧版 SCP 协议即可。</span>
+</span></span><span style="display:flex;"><span>scp -O -r <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oKexAlgorithms<span style="color:#f92672">=</span>diffie-hellman-group14-sha1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oHostKeyAlgorithms<span style="color:#f92672">=</span>ssh-rsa <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  root@192.168.31.1:/extdisks/sda1/backup ./backup_r3g_<span style="color:#66d9ef">$(</span>date +%F<span style="color:#66d9ef">)</span>/
+</span></span></code></pre></div><blockquote>
+<p>说明：小米开发版的 SSH 算法较旧，macOS 新版 OpenSSH/<code>scp</code> 可能报
+“no matching key exchange method found”。上面命令通过 <code>-oKexAlgorithms</code> 做了兼容。
+另外，有些环境的 <code>scp</code> 不支持 <code>KexAlgorithms=+xxx</code> 这种“追加语法”，所以这里用的是“直接指定算法列表”的写法（兼容性更好）。
+等你刷入 ImmortalWrt 后通常不再需要这些参数。</p>
+</blockquote>
+<blockquote>
+<p>备选方案（不用 scp）：用 <code>tar</code> 走 SSH 打包传回本地（也兼容缺少 sftp-server 的环境）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh -oKexAlgorithms<span style="color:#f92672">=</span>diffie-hellman-group14-sha1 -oHostKeyAlgorithms<span style="color:#f92672">=</span>ssh-rsa root@192.168.31.1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;tar -C /extdisks/sda1 -czf - backup&#34;</span> &gt; <span style="color:#e6db74">&#34;backup_r3g_</span><span style="color:#66d9ef">$(</span>date +%F<span style="color:#66d9ef">)</span><span style="color:#e6db74">.tgz&#34;</span>
+</span></span></code></pre></div></blockquote>
+<ol start="6">
+<li>备份完成后<strong>不要只放在 U 盘</strong>：建议再拷到 NAS/云盘一份（救砖时非常值钱）。</li>
+</ol>
+<h3 id="32-准备-immortalwrt-镜像文件">3.2 准备 ImmortalWrt 镜像文件<a hidden class="anchor" aria-hidden="true" href="#32-准备-immortalwrt-镜像文件">#</a></h3>
+<p>把下面两个文件准备好（推荐放到 U 盘根目录；也可以用 macOS 直接 <code>scp</code> 上传）：</p>
+<ul>
+<li><code>immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin</code></li>
+<li><code>immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin</code></li>
+</ul>
+<p>并确保已通过 <code>sha256sums</code> 校验。</p>
+<p><strong>方式 A（推荐）：直接上传到 U 盘挂载点</strong>（你这里是 <code>/extdisks/sda1</code>，后面的写入命令就不用改）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd xiaomi3G_openwrt/tools/macos/downloads
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scp -O <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oKexAlgorithms<span style="color:#f92672">=</span>diffie-hellman-group14-sha1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oHostKeyAlgorithms<span style="color:#f92672">=</span>ssh-rsa <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  root@192.168.31.1:/extdisks/sda1/
+</span></span></code></pre></div><p><strong>方式 B（备选）：上传到路由器 <code>/tmp</code></strong>（临时目录，重启会清空；后面的写入命令需要把 <code>cd</code> 改到 <code>/tmp</code>）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd xiaomi3G_openwrt/tools/macos/downloads
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 说明：小米开发版 SSH 算法较旧，且可能缺少 sftp-server；</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># -O 强制 scp 走旧协议，避免默认走 SFTP 报错</span>
+</span></span><span style="display:flex;"><span>scp -O <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oKexAlgorithms<span style="color:#f92672">=</span>diffie-hellman-group14-sha1 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -oHostKeyAlgorithms<span style="color:#f92672">=</span>ssh-rsa <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  root@192.168.31.1:/tmp/
+</span></span></code></pre></div><h3 id="33-写入镜像并切换启动">3.3 写入镜像并切换启动<a hidden class="anchor" aria-hidden="true" href="#33-写入镜像并切换启动">#</a></h3>
+<blockquote>
+<p>注意：分区名必须是 <code>kernel1</code> 与 <code>rootfs0</code>（R3G 常见布局如此）。执行前先用 <code>cat /proc/mtd</code> 确认；写错分区会变砖。</p>
+</blockquote>
+<blockquote>
+<p>这里需要登录到路由器
+<a href="mailto:root@192.168.31.1">root@192.168.31.1</a></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 如果你按“方式 A”把固件放到 U 盘：就在 /extdisks/sda1 执行</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 如果你按“方式 B”把固件放到 /tmp：就把下面这行改成 cd /tmp</span>
+</span></span><span style="display:flex;"><span>cd /extdisks/sda1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 先确认文件存在、大小正常（避免写入 0 字节/下载不完整）</span>
+</span></span><span style="display:flex;"><span>ls -lh immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>      immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-kernel1.bin kernel1
+</span></span><span style="display:flex;"><span>mtd write immortalwrt-24.10.4-ramips-mt7621-xiaomi_mi-router-3g-squashfs-rootfs0.bin rootfs0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动标记（不同小米固件变量可能略有差异）</span>
+</span></span><span style="display:flex;"><span>nvram set flag_try_sys1_failed<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>nvram commit
+</span></span><span style="display:flex;"><span>reboot
+</span></span></code></pre></div><hr>
+<h2 id="第-4-步首次进入-immortalwrt-与基础设置">第 4 步：首次进入 ImmortalWrt 与基础设置<a hidden class="anchor" aria-hidden="true" href="#第-4-步首次进入-immortalwrt-与基础设置">#</a></h2>
+<p>首次刷入后 <strong>Wi‑Fi 可能未配置</strong>，建议按下面方式做“首次登录”，最不容易卡住：</p>
+<ol>
+<li><strong>断开光猫</strong>（先不要把小米 WAN 接到光猫，避免网段冲突/浏览器缓存跳转）。</li>
+<li>电脑用网线连接小米 <strong>LAN 口</strong>。</li>
+<li>等待重启完成（NAND 写入后首次启动可能更慢，建议等 3~5 分钟）。</li>
+<li>打开 <code>http://192.168.1.1</code>（如打不开，尝试把电脑网卡改成静态 IP：<code>192.168.1.2/24</code>，网关 <code>192.168.1.1</code>）。</li>
+<li>设置 root 密码并进入 LuCI。</li>
+</ol>
+<p>常见问题排查：</p>
+<ul>
+<li><strong>进不了 192.168.1.1</strong>：先 <code>ping 192.168.1.1</code> 看是否通；不通就换网线/换 LAN 口/等更久；仍不通 → 进入“救砖/回滚”章节用 USB 恢复回原厂再重试。</li>
+<li><strong>网段冲突</strong>：如果你家光猫是 <code>192.168.1.1</code>（常见），等你后面把小米做二级路由时，小米 LAN 一定要改成别的网段（例如 <code>192.168.31.1</code>，见第 5 步）。</li>
+</ul>
+<hr>
+<h2 id="第-5-步模式-a旁路由二级路由网络配置">第 5 步：模式 A（旁路由/二级路由）网络配置<a hidden class="anchor" aria-hidden="true" href="#第-5-步模式-a旁路由二级路由网络配置">#</a></h2>
+<h3 id="51-ip-规划建议">5.1 IP 规划建议<a hidden class="anchor" aria-hidden="true" href="#51-ip-规划建议">#</a></h3>
+<ul>
+<li>光猫 LAN：保持现状（例如 <code>192.168.1.1/24</code> 或 <code>192.168.0.1/24</code>）</li>
+<li>小米 LAN：改为不冲突网段，例如 <strong><code>192.168.31.1/24</code></strong>（适用于你当前“光猫 192.168.1.1”的情况）</li>
+</ul>
+<h3 id="52-wan上联光猫">5.2 WAN（上联光猫）<a hidden class="anchor" aria-hidden="true" href="#52-wan上联光猫">#</a></h3>
+<ul>
+<li>协议：DHCP Client</li>
+</ul>
+<h3 id="53-lan--dhcp">5.3 LAN / DHCP<a hidden class="anchor" aria-hidden="true" href="#53-lan--dhcp">#</a></h3>
+<ul>
+<li>LAN IP：<code>192.168.31.1/24</code></li>
+<li>DHCP：开启（例如 <code>192.168.31.100</code> - <code>192.168.31.200</code>）</li>
+</ul>
+<h3 id="54-wifi">5.4 Wi‑Fi<a hidden class="anchor" aria-hidden="true" href="#54-wifi">#</a></h3>
+<ul>
+<li>2.4G/5G 都开启</li>
+<li>SSID 明确区分（按你的命名）：<code>Xiaomi_zjw</code>（2.4G） / <code>Xiaomi_zjw_5G</code>（5G）</li>
+</ul>
+<h3 id="55-luci-按图操作小白版">5.5 LuCI 按图操作（小白版）<a hidden class="anchor" aria-hidden="true" href="#55-luci-按图操作小白版">#</a></h3>
+<p>接线先按模式 A：</p>
+<ul>
+<li>光猫 LAN → 小米 WAN</li>
+<li>电脑先连小米 LAN 口进入 LuCI</li>
+</ul>
+<p>在 LuCI 依次做：</p>
+<ol>
+<li><strong>网络 → 接口 → WAN</strong>
+<ul>
+<li>协议：<strong>DHCP 客户端</strong></li>
+<li>保存&amp;应用</li>
+</ul>
+</li>
+<li><strong>网络 → 接口 → LAN</strong>
+<ul>
+<li>IPv4 地址：<code>192.168.31.1</code></li>
+<li>IPv4 子网掩码：<code>255.255.255.0</code></li>
+<li>保存&amp;应用</li>
+</ul>
+</li>
+<li><strong>网络 → DHCP/DNS</strong>
+<ul>
+<li>确认 LAN 口 DHCP 服务已启用</li>
+<li>地址池建议：<code>192.168.31.100</code> - <code>192.168.31.200</code></li>
+</ul>
+</li>
+<li><strong>网络 → 无线</strong>
+<ul>
+<li>启用 2.4G + 5G</li>
+<li>SSID 按你的命名：
+<ul>
+<li>2.4G：<code>Xiaomi_zjw</code> (看频段)</li>
+<li>5G：<code>Xiaomi_zjw_5G</code>（看频段）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>重要：你当前光猫是 <code>192.168.1.1</code>，而 ImmortalWrt 首次进入默认常见是 <code>192.168.1.1</code>，会冲突；所以第 2 步把小米 LAN 改到 <code>192.168.31.1</code>（或其它不冲突网段）是关键。</p>
+</blockquote>
+<h3 id="56-验收模式-a-是否配置成功">5.6 验收（模式 A 是否配置成功）<a hidden class="anchor" aria-hidden="true" href="#56-验收模式-a-是否配置成功">#</a></h3>
+<p>用两台设备分别测试（最直观）：</p>
+<ul>
+<li><strong>设备 A（连光猫 Wi‑Fi）</strong>：
+<ul>
+<li>IP 应该是光猫网段（例如 <code>192.168.1.x</code>）</li>
+<li>网关应是光猫（例如 <code>192.168.1.1</code>）</li>
+</ul>
+</li>
+<li><strong>设备 B（连小米 Wi‑Fi 或 LAN）</strong>：
+<ul>
+<li>IP 应该是 <code>192.168.31.x</code></li>
+<li>网关应是 <code>192.168.31.1</code></li>
+<li>能正常上网（先测 <code>ping 114.114.114.114</code>，再测 DNS 解析）</li>
+</ul>
+</li>
+</ul>
+<h3 id="57-常见坑模式-a">5.7 常见坑（模式 A）<a hidden class="anchor" aria-hidden="true" href="#57-常见坑模式-a">#</a></h3>
+<ul>
+<li><strong>双 DHCP</strong>：如果你把小米 LAN 口接到了光猫 LAN（而不是 WAN），容易出现网络里两个 DHCP；模式 A 固定用“光猫 LAN → 小米 WAN”。</li>
+<li><strong>网段冲突</strong>：光猫和小米都用 <code>192.168.1.1</code> 会抢网关；务必把小米 LAN 改到 <code>192.168.31.1</code> 或其它网段。</li>
+<li><strong>SSID 混淆</strong>：建议光猫和小米 SSID 命名明显区分，避免连错导致“怎么不一样”的错觉。</li>
+</ul>
+<hr>
+<h2 id="第-6-步模式-b主路由拨号主路由体验">第 6 步：模式 B（主路由拨号/主路由体验）<a hidden class="anchor" aria-hidden="true" href="#第-6-步模式-b主路由拨号主路由体验">#</a></h2>
+<h3 id="60-判定-pppoe-passthrough多拨是否可用不改桥接前提">6.0 判定 PPPoE passthrough/多拨是否可用（不改桥接前提）<a hidden class="anchor" aria-hidden="true" href="#60-判定-pppoe-passthrough多拨是否可用不改桥接前提">#</a></h3>
+<p>你当前不改光猫桥接，所以这里做一个“实测判定”：</p>
+<ol>
+<li>接线：光猫 LAN → 小米 WAN</li>
+<li>LuCI：网络 → 接口 → WAN → 编辑
+<ul>
+<li>协议：PPPoE</li>
+<li>填入：宽带账号/密码</li>
+<li>保存&amp;应用</li>
+</ul>
+</li>
+<li>等待 30~60 秒，看 WAN 状态：
+<ul>
+<li><strong>拨号成功</strong>：WAN 显示 PPPoE 分配的地址并能上网 → 进入 <strong>B1</strong></li>
+<li><strong>拨号失败/超时</strong>：多半是不支持 passthrough/多拨 → 进入 <strong>B2</strong></li>
+</ul>
+</li>
+</ol>
+<p>判定小技巧（更稳）：</p>
+<ul>
+<li>若 WAN IPv4 是 <code>10.x</code> / <code>172.16-31.x</code> / <code>192.168.x</code>，一般就是私网（更像 B2）</li>
+<li>若 WAN 是私网且你查询到的“外网 IP”明显不同，基本就是双 NAT（B2）</li>
+</ul>
+<h3 id="61-b1pppoe-成功理想">6.1 B1：PPPoE 成功（理想）<a hidden class="anchor" aria-hidden="true" href="#61-b1pppoe-成功理想">#</a></h3>
+<ul>
+<li>WAN：PPPoE（保持）</li>
+<li>LAN：你的内网网段（例如 <code>192.168.31.1/24</code>）</li>
+<li>DHCP/Wi‑Fi：开启</li>
+</ul>
+<p>建议：</p>
+<ul>
+<li>尽量让设备只连接小米（避免“同一个家里两套路由并存”造成路径混乱）。</li>
+<li>若光猫 Wi‑Fi 必须开着，至少把 SSID 命名区分明显，避免连错。</li>
+</ul>
+<h3 id="62-b2pppoe-不可用常见">6.2 B2：PPPoE 不可用（常见）<a hidden class="anchor" aria-hidden="true" href="#62-b2pppoe-不可用常见">#</a></h3>
+<ul>
+<li>WAN：DHCP（从光猫拿到私网地址）</li>
+<li>小米继续提供 DHCP/Wi‑Fi（主路由体验），但本质是 <strong>双重 NAT</strong></li>
+</ul>
+<p>这种情况下，你“主路由体验”是有的（设备都连小米），但：</p>
+<ul>
+<li>一些需要入站端口/远程访问的场景会更麻烦（需要在光猫和小米两边都做端口映射）</li>
+<li>某些游戏/语音/点对点应用可能更挑网络</li>
+</ul>
+<p>可选优化（如果你能操作光猫管理页）：</p>
+<ul>
+<li><strong>DMZ</strong>：把光猫 DMZ 指向“小米 WAN 获取到的地址”
+<ul>
+<li>优点：你只需要在小米上做端口转发，光猫层面基本不用再配</li>
+<li>风险：等同把小米暴露在光猫之后，务必关掉不需要的管理入口、保持系统更新、强密码</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="可选dns-加速--网络稳定性优化推荐做">可选：DNS 加速 + 网络稳定性优化（推荐做）<a hidden class="anchor" aria-hidden="true" href="#可选dns-加速--网络稳定性优化推荐做">#</a></h2>
+<blockquote>
+<p>本节只做“上网体验/稳定性”优化，不依赖任何代理类插件；建议在你完成模式 A/B 并能正常上网后再做。</p>
+</blockquote>
+<h3 id="dns-加速dnsmasq-缓存--指定上游">DNS 加速（dnsmasq 缓存 + 指定上游）<a hidden class="anchor" aria-hidden="true" href="#dns-加速dnsmasq-缓存--指定上游">#</a></h3>
+<p>LuCI：<strong>网络 → DHCP/DNS</strong></p>
+<ul>
+<li><strong>DNS 转发</strong>（上游 DNS）：建议填 2 个稳定的公共 DNS（示例）
+<ul>
+<li><code>223.5.5.5</code></li>
+<li><code>119.29.29.29</code></li>
+</ul>
+</li>
+<li><strong>DNS 缓存大小</strong>：建议 <code>10000</code>（家用足够）</li>
+</ul>
+<p>可选（更“强制”一点，避免被上联下发 DNS 覆盖）：</p>
+<ol>
+<li>LuCI：网络 → 接口 → <strong>WAN</strong> → 编辑 → 高级设置</li>
+<li>勾选 <strong>忽略此接口的 DNS 服务器（Ignore DNS server advertised by peer）</strong></li>
+</ol>
+<p>验证（在路由器上执行）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>nslookup www.baidu.com
+</span></span><span style="display:flex;"><span>nslookup www.qq.com
+</span></span></code></pre></div><h3 id="网络加速稳定性流量分载">网络加速/稳定性（流量分载）<a hidden class="anchor" aria-hidden="true" href="#网络加速稳定性流量分载">#</a></h3>
+<p>LuCI：<strong>网络 → 防火墙 → 常规设置</strong></p>
+<ul>
+<li><strong>软件流量分载（Software flow offloading）</strong>：开启</li>
+<li><strong>硬件流量分载（Hardware flow offloading）</strong>：有的话再开启</li>
+</ul>
+<blockquote>
+<p>提示：开启后大流量转发 CPU 占用会下降、吞吐更稳；但极少数插件/特殊场景可能与分载有冲突，遇到异常可先关闭验证。</p>
+</blockquote>
+<h3 id="wifi-稳定性建议家用最常见的几条">Wi‑Fi 稳定性建议（家用最常见的几条）<a hidden class="anchor" aria-hidden="true" href="#wifi-稳定性建议家用最常见的几条">#</a></h3>
+<p>LuCI：<strong>网络 → 无线</strong></p>
+<ul>
+<li><strong>2.4G</strong>：建议固定信道为 1/6/11 之一，带宽优先 20MHz（更稳）</li>
+<li><strong>5G</strong>：优先选择非 DFS 常用信道（减少因雷达检测导致的断流/换信道）</li>
+<li>SSID 按你的命名：<code>Xiaomi_zjw</code>（2.4G）/ <code>Xiaomi_zjw_5G</code>（5G）</li>
+</ul>
+<p>验证（终端）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 用 curl 测真实联网（比 ping 更可靠，很多网络会屏蔽 ICMP）</span>
+</span></span><span style="display:flex;"><span>curl -I https://www.baidu.com
+</span></span></code></pre></div><hr>
+<h2 id="第-7-步usb30-扩展挂载--extroot--nas下载机">第 7 步：USB3.0 扩展（挂载 + extroot + NAS/下载机）<a hidden class="anchor" aria-hidden="true" href="#第-7-步usb30-扩展挂载--extroot--nas下载机">#</a></h2>
+<h3 id="70-先选一种用法强烈建议先看完再动手">7.0 先选一种用法（强烈建议先看完再动手）<a hidden class="anchor" aria-hidden="true" href="#70-先选一种用法强烈建议先看完再动手">#</a></h3>
+<blockquote>
+<p>第 7 步不是必须的。
+如果你当前目标只是：刷机成功 + 旁路由/主路由模式正常上网（含代理/分流），完全可以先跳过第 7 步。
+等你以后确实需要用 USB3.0 挂硬盘（做 NAS/下载机，或觉得插件空间不够才想 extroot）时，再回来按第 7 步做就行。
+小米路由器 3G（R3G）日常当路由/旁路由是够用的，但要不要长期挂外置盘，取决于你要跑多“重”的功能。
+硬件大概够不够
+内存（RAM）：一般是 256MB
+够：普通拨号/DHCP/NAT、Wi‑Fi、基础科学上网（单一代理内核+少量规则）、轻量 DNS 去广告
+紧张：多插件并发（OpenClash 大规则/大订阅、复杂分流、下载机+NAS 同开、日志/监控一堆）
+机身存储（Flash/NAND）：一般 128MB
+够：干净系统 + 少量插件
+容易满：装很多 LuCI 插件、代理套件、adblock 规则很大、下载机/媒体服务等</p>
+</blockquote>
+<p>本节分 <strong>3 种情况</strong>，你只需要选一种做（不要混着做）：</p>
+<ul>
+<li>
+<p><strong>情况 1：只挂载数据盘（不做 extroot）</strong>（推荐大多数人）</p>
+</li>
+<li>
+<p><strong>使用场景</strong>：你主要想要 NAS/下载机/存储共享；路由器本体（网络、插件、配置）不依赖硬盘。</p>
+</li>
+<li>
+<p><strong>建议</strong>：最稳、最少坑。硬盘不是“系统必需品”，拔掉也不影响路由器基本工作。</p>
+</li>
+<li>
+<p><strong>要做的操作</strong>：</p>
+<ul>
+<li>做到：<code>7.3</code>、<code>7.4</code>、<code>7.5</code></li>
+<li><strong>不要做</strong>：<code>7.6</code>（extroot）</li>
+</ul>
+</li>
+<li>
+<p><strong>情况 2：extroot（把 /overlay 迁移到 USB）</strong></p>
+</li>
+<li>
+<p><strong>使用场景</strong>：你要装较多插件/规则，担心内部 NAND 空间不够或写入过多；愿意让 USB 盘长期连接。</p>
+</li>
+<li>
+<p><strong>建议</strong>：extroot 启用后，USB 盘应当<strong>长期插着</strong>。拔掉后系统可能回退到内部 NAND 的 overlay，导致“插件/配置像没了”。</p>
+</li>
+<li>
+<p><strong>要做的操作</strong>：</p>
+<ul>
+<li>做到：<code>7.3</code>、<code>7.4</code>、<code>7.5</code>、<code>7.6</code></li>
+</ul>
+</li>
+<li>
+<p><strong>情况 3：extroot + 数据盘服务（NAS/下载机长期运行）</strong>（偏重度玩法）</p>
+</li>
+<li>
+<p><strong>使用场景</strong>：你既要大量插件（extroot），又要长期跑 Samba/aria2 等服务，并把数据放在数据盘分区。</p>
+</li>
+<li>
+<p><strong>建议</strong>：</p>
+<ul>
+<li>外置硬盘务必供电稳定（尽量用带电源盒子/稳定供电的移动硬盘），避免因掉电/松动导致 extroot 异常。</li>
+<li>数据目录放数据盘（例如 <code>/mnt/sda2/</code>），系统/插件放 extroot 分区（<code>/overlay</code>）。</li>
+</ul>
+</li>
+<li>
+<p><strong>要做的操作</strong>：</p>
+<ul>
+<li>做到：<code>7.3</code>、<code>7.4</code>、<code>7.5</code>、<code>7.6</code></li>
+<li>然后按需做：<code>7.7</code>（NAS）、<code>7.8</code>（下载机）</li>
+</ul>
+</li>
+</ul>
+<h3 id="71-为什么建议-extroot">7.1 为什么建议 extroot<a hidden class="anchor" aria-hidden="true" href="#71-为什么建议-extroot">#</a></h3>
+<p>OpenWrt 系系统装插件会写入 <code>/overlay</code>（NAND）。用 extroot 把 <code>/overlay</code> 迁移到 USB 存储：</p>
+<ul>
+<li>空间更大</li>
+<li>减少 NAND 写入，更耐用</li>
+</ul>
+<h3 id="72-分区建议推荐">7.2 分区建议（推荐）<a hidden class="anchor" aria-hidden="true" href="#72-分区建议推荐">#</a></h3>
+<ul>
+<li>分区 1：ext4（extroot，建议 4~8GB 或更大）</li>
+<li>分区 2：ext4（数据盘：NAS/下载）</li>
+<li>可选：swap（512MB~2GB，按插件规模）</li>
+</ul>
+<blockquote>
+<p>重要：macOS 原生不方便直接格式化 ext4。最稳妥做法是：<strong>在路由器上分区+格式化</strong>（下面给可照抄命令）。</p>
+</blockquote>
+<h3 id="73-安装-usb文件系统组件路由器上执行">7.3 安装 USB/文件系统组件（路由器上执行）<a hidden class="anchor" aria-hidden="true" href="#73-安装-usb文件系统组件路由器上执行">#</a></h3>
+<p>SSH 登录 ImmortalWrt 后执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>opkg update
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># USB/存储/分区工具</span>
+</span></span><span style="display:flex;"><span>opkg install kmod-usb-storage kmod-usb3 kmod-usb2 kmod-scsi-core <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  block-mount fdisk lsblk
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ext4 + 工具</span>
+</span></span><span style="display:flex;"><span>opkg install kmod-fs-ext4 e2fsprogs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可选：FAT/NTFS（你若要临时读写U盘/移动硬盘）</span>
+</span></span><span style="display:flex;"><span>opkg install kmod-fs-vfat dosfstools
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可选：swap</span>
+</span></span><span style="display:flex;"><span>opkg install swap-utils
+</span></span></code></pre></div><p>插入你的 USB3.0 硬盘/U 盘后，确认识别：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>lsblk
+</span></span><span style="display:flex;"><span>block info
+</span></span><span style="display:flex;"><span>dmesg | tail -n <span style="color:#ae81ff">50</span>
+</span></span></code></pre></div><blockquote>
+<p>下面示例默认你的盘是 <code>/dev/sda</code>。如果你看到的是 <code>/dev/sdb</code>，请把命令里的 sda 全部替换。</p>
+</blockquote>
+<h3 id="74-分区与格式化路由器上执行注意会清空数据">7.4 分区与格式化（路由器上执行，注意会清空数据）<a hidden class="anchor" aria-hidden="true" href="#74-分区与格式化路由器上执行注意会清空数据">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>DISK<span style="color:#f92672">=</span>/dev/sda
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1) 用 fdisk 分区：创建 sda1(extroot) + sda2(data) + (可选)sda3(swap)</span>
+</span></span><span style="display:flex;"><span>fdisk <span style="color:#e6db74">&#34;</span>$DISK<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>进入 <code>fdisk</code> 后按顺序输入（一步一步照抄，大小你可自行调整）：</p>
+<ul>
+<li><code>g</code>（新建 GPT 分区表；如果你更喜欢 MBR，可用 <code>o</code>，但 GPT 更通用）</li>
+<li><code>n</code> → 分区 1（extroot）
+<ul>
+<li>分区号：<code>1</code></li>
+<li>起始扇区：直接回车</li>
+<li>结束扇区：例如 <code>+8G</code></li>
+</ul>
+</li>
+<li><code>n</code> → 分区 2（数据盘）
+<ul>
+<li>分区号：<code>2</code></li>
+<li>起始扇区：回车</li>
+<li>结束扇区：回车（用掉剩余空间；如果你要 swap，则给数据盘留一点）</li>
+</ul>
+</li>
+<li>（可选）<code>n</code> → 分区 3（swap）
+<ul>
+<li>分区号：<code>3</code></li>
+<li>起始扇区：回车</li>
+<li>结束扇区：例如 <code>+1G</code></li>
+</ul>
+</li>
+<li><code>w</code>（写入并退出）</li>
+</ul>
+<p>分区完成后格式化：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkfs.ext4 -F -L extroot /dev/sda1
+</span></span><span style="display:flex;"><span>mkfs.ext4 -F -L data /dev/sda2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可选 swap</span>
+</span></span><span style="display:flex;"><span>mkswap -L swap /dev/sda3 2&gt;/dev/null <span style="color:#f92672">||</span> true
+</span></span></code></pre></div><h3 id="75-自动挂载fstab">7.5 自动挂载（fstab）<a hidden class="anchor" aria-hidden="true" href="#75-自动挂载fstab">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 生成 fstab</span>
+</span></span><span style="display:flex;"><span>block detect &gt; /etc/config/fstab
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启用自动挂载（把前两个 mount 的 enabled 改为 1；如有多个条目，按需修改）</span>
+</span></span><span style="display:flex;"><span>uci set fstab.@mount<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>.enabled<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;1&#39;</span>
+</span></span><span style="display:flex;"><span>uci set fstab.@mount<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>.enabled<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;1&#39;</span>
+</span></span><span style="display:flex;"><span>uci commit fstab
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/etc/init.d/fstab enable
+</span></span><span style="display:flex;"><span>/etc/init.d/fstab restart
+</span></span><span style="display:flex;"><span>mount | grep -E <span style="color:#e6db74">&#39;sda1|sda2&#39;</span> <span style="color:#f92672">||</span> true
+</span></span></code></pre></div><blockquote>
+<p>建议你在 LuCI：系统 → 挂载点 里再确认一次 UUID/挂载点是否正确。</p>
+</blockquote>
+<h3 id="76-配置-extroot把-overlay-迁移到-usb">7.6 配置 extroot（把 <code>/overlay</code> 迁移到 USB）<a hidden class="anchor" aria-hidden="true" href="#76-配置-extroot把-overlay-迁移到-usb">#</a></h3>
+<blockquote>
+<p>只在你选择了上面第 2/3 种情况时执行；如果你只想“挂载数据盘”，请跳过本节。</p>
+</blockquote>
+<ol>
+<li>先把 extroot 分区临时挂载到一个目录（示例 <code>/mnt/extroot</code>）：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /mnt/extroot
+</span></span><span style="display:flex;"><span>mount /dev/sda1 /mnt/extroot
+</span></span></code></pre></div><ol start="2">
+<li>把当前 overlay 内容拷贝过去：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>tar -C /overlay -cvf - . | tar -C /mnt/extroot -xvf -
+</span></span><span style="display:flex;"><span>sync
+</span></span></code></pre></div><ol start="3">
+<li>配置把 <code>/dev/sda1</code> 挂载到 <code>/overlay</code>（推荐用 UUID）：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>blkid /dev/sda1
+</span></span></code></pre></div><p>在 <code>/etc/config/fstab</code>（或 LuCI 挂载点）里把 sda1 对应条目改成：</p>
+<ul>
+<li>目标（target）：<code>/overlay</code></li>
+<li>启用（enabled）：<code>1</code></li>
+</ul>
+<ol start="4">
+<li>重启：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>reboot
+</span></span></code></pre></div><p>重启后验证：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>df -h | grep -E <span style="color:#e6db74">&#39;overlay|/dev/sda&#39;</span>
+</span></span><span style="display:flex;"><span>mount | grep overlay
+</span></span></code></pre></div><p>若看到 <code>overlay</code> 来自 <code>/dev/sda1</code>，extroot 生效。</p>
+<h3 id="77-可选nassamba4">7.7 可选：NAS（Samba4）<a hidden class="anchor" aria-hidden="true" href="#77-可选nassamba4">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>opkg update
+</span></span><span style="display:flex;"><span>opkg install luci-app-samba4 samba4-server
+</span></span></code></pre></div><p>LuCI：服务 → 网络共享（Samba4）</p>
+<ul>
+<li>共享目录建议放在数据盘（例如 <code>/mnt/sda2/share</code>）</li>
+<li>账号/权限按家庭需求配置（不建议匿名写入）</li>
+</ul>
+<h3 id="78-可选下载机aria2">7.8 可选：下载机（aria2）<a hidden class="anchor" aria-hidden="true" href="#78-可选下载机aria2">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>opkg update
+</span></span><span style="display:flex;"><span>opkg install luci-app-aria2 aria2
+</span></span></code></pre></div><p>下载目录同样建议放在数据盘（例如 <code>/mnt/sda2/downloads</code>）。</p>
+<hr>
+<h2 id="第-8-步手动切换清单a--b">第 8 步：手动切换清单（A ↔ B）<a hidden class="anchor" aria-hidden="true" href="#第-8-步手动切换清单a--b">#</a></h2>
+<h3 id="a--b">A → B<a hidden class="anchor" aria-hidden="true" href="#a--b">#</a></h3>
+<ul>
+<li><strong>接线</strong>（两种模式都保持一致，减少插线错误）：光猫 LAN → 小米 WAN</li>
+<li><strong>切换 WAN 协议</strong>（LuCI：网络 → 接口 → WAN → 编辑）：
+<ul>
+<li>先尝试 <strong>PPPoE</strong>（填账号/密码）→ 保存&amp;应用</li>
+<li>观察 30~60 秒：
+<ul>
+<li>成功：进入 <strong>B1</strong></li>
+<li>失败/超时：改回 <strong>DHCP 客户端</strong> → 进入 <strong>B2</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>验收（建议按顺序）：</p>
+<ol>
+<li>LuCI：状态 → 概览 → <strong>WAN</strong>
+<ul>
+<li>B1：应显示 PPPoE 已连接，且 WAN 地址通常不是 <code>192.168.x.x</code></li>
+<li>B2：应显示 DHCP 获取到私网地址（常见 <code>192.168.x.x</code>）</li>
+</ul>
+</li>
+<li>终端（可选，SSH 登录路由器后）：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ip a show dev wan
+</span></span><span style="display:flex;"><span>ip route
+</span></span><span style="display:flex;"><span>ping -c <span style="color:#ae81ff">3</span> 114.114.114.114
+</span></span><span style="display:flex;"><span>nslookup openwrt.org 114.114.114.114
+</span></span></code></pre></div><p>常见坑（A→B）：</p>
+<ul>
+<li><strong>PPPoE 一直失败</strong>：大概率光猫不支持 passthrough/多拨 → 直接切 B2（DHCP）</li>
+<li><strong>浏览器进不了 LuCI</strong>：多为缓存/网段冲突，建议固定电脑 IP、换浏览器或无痕模式</li>
+<li><strong>两边都开 DHCP</strong>：模式 B 下“光猫仍在路由模式”时，尽量不要让设备再连光猫 Wi‑Fi，避免网络混乱</li>
+</ul>
+<h3 id="b--a">B → A<a hidden class="anchor" aria-hidden="true" href="#b--a">#</a></h3>
+<ul>
+<li><strong>WAN 统一切回 DHCP 客户端</strong>（LuCI：网络 → 接口 → WAN）</li>
+<li><strong>LAN 网段保持不变</strong>（你这里用 <code>192.168.31.1/24</code> 即可，前提是光猫不是 31 段）</li>
+<li><strong>设备按需连接</strong>：
+<ul>
+<li>需要策略网络：连小米</li>
+<li>只要国内网络：连光猫</li>
+</ul>
+</li>
+</ul>
+<p>验收（B→A）：</p>
+<ul>
+<li>设备连小米：拿到 <code>192.168.31.x</code>，网关 <code>192.168.31.1</code>，能上网</li>
+<li>设备连光猫：继续拿到光猫网段地址（例如 <code>192.168.1.x</code>），能上网</li>
+</ul>
+<p>常见坑（B→A）：</p>
+<ul>
+<li><strong>把光猫 LAN 插到了小米 LAN</strong>：容易出现双 DHCP；模式 A 固定“光猫 LAN → 小米 WAN”</li>
+<li><strong>网段冲突</strong>：光猫如果是 <code>192.168.1.1</code>，小米 LAN 必须避开 <code>192.168.1.1</code>（例如用 <code>192.168.31.1</code>）</li>
+</ul>
+<hr>
+<h2 id="救砖回滚不拆机">救砖/回滚（不拆机）<a hidden class="anchor" aria-hidden="true" href="#救砖回滚不拆机">#</a></h2>
+<h3 id="usb-恢复回原厂稳定版">USB 恢复回原厂稳定版<a hidden class="anchor" aria-hidden="true" href="#usb-恢复回原厂稳定版">#</a></h3>
+<ol>
+<li>U 盘 FAT32</li>
+<li>把原厂稳定版复制到 U 盘根目录并重命名为 <code>miwifi.bin</code>
+<ul>
+<li><code>miwifi_r3g_firmware_9be74_2.28.44.bin</code></li>
+</ul>
+</li>
+<li>按住 Reset 上电进入恢复刷回</li>
+</ol>
+<p>建议的“救砖前检查”：</p>
+<ul>
+<li>先用网线直连路由器 LAN，看看电脑能不能拿到地址、能不能 <code>ping 192.168.1.1</code>（或你改过的 LAN IP）。</li>
+<li>如果完全没反应/频繁重启/管理页打不开，优先走 USB 恢复，成功率最高。</li>
+</ul>
+<p>USB 恢复要点（更小白一点）：</p>
+<ul>
+<li>U 盘不要太大、不要带奇怪分区（8~32GB 的普通 U 盘最省心）</li>
+<li>根目录只放 <code>miwifi.bin</code>，不要放其它文件</li>
+<li>进入恢复后<strong>耐心等 5~10 分钟</strong>（不要中途断电）</li>
+</ul>
+<h3 id="分区恢复需要你有备份">分区恢复（需要你有备份）<a hidden class="anchor" aria-hidden="true" href="#分区恢复需要你有备份">#</a></h3>
+<p>适用场景：你还能 SSH 进设备（或至少还能进入某个可执行命令的系统），想把关键分区恢复回备份状态。</p>
+<p>思路：</p>
+<ol>
+<li>把你在第 3.1 步备份的文件拷回路由器（例如 <code>/tmp/restore/</code>）</li>
+<li>对照 <code>backup/proc_mtd.txt</code> 找到分区名</li>
+<li>使用 <code>mtd write</code> 写回（<strong>分区名必须完全匹配</strong>）</li>
+</ol>
+<p>示例（仅示意，按你的备份文件名/分区名调整）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /tmp/restore
+</span></span><span style="display:flex;"><span>cd /tmp/restore
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 假设你拷进来了：mtd0_bootloader.bin / mtd2_factory.bin ...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 写回示例（高风险！写错会直接变砖！）</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># mtd write mtd0_bootloader.bin bootloader</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># mtd write mtd2_factory.bin factory</span>
+</span></span></code></pre></div><blockquote>
+<p>重要警告：<code>bootloader</code>/<code>u-boot</code> 一类分区写错基本“直接硬砖”。如果你不确定，宁可只用 USB 恢复回原厂。</p>
+</blockquote>
+<p>最后兜底（不在本文展开）：TTL 串口（需要拆机/接线），仅作为你愿意折腾时的最后手段。</p>
+<hr>
+<h2 id="验收清单">验收清单<a hidden class="anchor" aria-hidden="true" href="#验收清单">#</a></h2>
+<ul>
+<li>模式 A：小米 WAN（DHCP）可上网；小米 LAN/Wi‑Fi 正常；与光猫网络可区分使用</li>
+<li>模式 B：
+<ul>
+<li>B1：PPPoE 拨号成功（若光猫支持）</li>
+<li>B2：DHCP 上联稳定（双 NAT），主路由体验满足</li>
+</ul>
+</li>
+<li>USB3.0：挂载稳定；若启用 extroot，重启后仍生效</li>
+</ul>
+<hr>
+<h2 id="相关阅读">相关阅读<a hidden class="anchor" aria-hidden="true" href="#相关阅读">#</a></h2>
+<ul>
+<li>若你更关心「科学上网」拓扑与快速上手，可先看：<a href="/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">《小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战》</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://maquren.top/tags/openwrt/">OpenWrt</a></li>
+      <li><a href="https://maquren.top/tags/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8/">小米路由器</a></li>
+      <li><a href="https://maquren.top/tags/immortalwrt/">ImmortalWrt</a></li>
+      <li><a href="https://maquren.top/tags/%E6%97%81%E8%B7%AF%E7%94%B1/">旁路由</a></li>
+      <li><a href="https://maquren.top/tags/%E5%88%B7%E6%9C%BA/">刷机</a></li>
+      <li><a href="https://maquren.top/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">环境搭建</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://maquren.top/posts/%E5%9F%9F%E5%90%8D%E5%85%8D%E8%B4%B9%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>域名免费网站搭建：Hugo &#43; PaperMod &#43; Cloudflare Pages &#43; Giscus 实战</span>
+  </a>
+  <a class="next" href="https://maquren.top/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">
+    <span class="title">Next »</span>
+    <br>
+    <span>小米路由器实现科学上网：R3G 刷 OpenWrt 与旁路由实战</span>
+  </a>
+</nav>
+
+  </footer><div class="comments-separator"></div>
+<section class="comments">
+  <script src="https://utteranc.es/client.js"
+          repo="zhangjiawei/hugo-maquren.top"
+          issue-term="pathname"
+          label="comment"
+          theme="github-dark"
+          crossorigin="anonymous"
+          async>
+  </script>
+</section>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://maquren.top/">maquren(码趣人) - 有趣的编码世界</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

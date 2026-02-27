@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://maquren.top/sitemap.xml
