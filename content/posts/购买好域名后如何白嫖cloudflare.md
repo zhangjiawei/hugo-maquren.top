@@ -6,6 +6,12 @@ description: "手把手教你在购买好域名后，用 0 成本接入 Cloudfla
 categories: ["建站实战"]
 tags: ["Cloudflare", "DNS", "SSL", "免费建站", "域名配置"]
 keywords: ["Cloudflare DNS 配置", "Cloudflare SSL", "Cloudflare Email Routing", "域名接入 Cloudflare", "NameSilo 教程"]
+ShowToc: true
+faq:
+  - q: "域名从 NameSilo 接入 Cloudflare 后，多久生效？"
+    a: "通常几分钟到数小时，极端情况可达 24 小时，生效后 Cloudflare 面板会显示 Active。"
+  - q: "Cloudflare 免费版够个人博客使用吗？"
+    a: "够用。DNS、SSL、CDN、Pages 托管和基础安全能力都可满足个人技术博客的日常需求。"
 draft: false
 ---
 

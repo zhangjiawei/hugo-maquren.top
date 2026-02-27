@@ -33,6 +33,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
+</script><script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"通常几分钟到数小时，极端情况可达 24 小时，生效后 Cloudflare 面板会显示 Active。"},"name":"域名从 NameSilo 接入 Cloudflare 后，多久生效？"},{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"够用。DNS、SSL、CDN、Pages 托管和基础安全能力都可满足个人技术博客的日常需求。"},"name":"Cloudflare 免费版够个人博客使用吗？"}]}
 </script>
 
 <meta property="og:url" content="https://maquren.top/posts/%E8%B4%AD%E4%B9%B0%E5%A5%BD%E5%9F%9F%E5%90%8D%E5%90%8E%E5%A6%82%E4%BD%95%E7%99%BD%E5%AB%96cloudflare/">
@@ -149,6 +151,11 @@
                     <span>关于</span>
                 </a>
             </li>
+            <li>
+                <a href="https://maquren.top/topics/" title="专题">
+                    <span>专题</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -166,7 +173,79 @@
     <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span>
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80%e5%89%8d%e8%a8%80%e4%b8%ba%e4%bb%80%e4%b9%88%e4%b8%80%e5%ae%9a%e8%a6%81%e7%94%a8-cloudflare" aria-label="一、前言：为什么一定要用 Cloudflare？">一、前言：为什么一定要用 Cloudflare？</a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%89%8d%e7%bd%ae%e6%9d%a1%e4%bb%b6%e4%bd%a0%e9%9c%80%e8%a6%81%e5%87%86%e5%a4%87%e4%bb%80%e4%b9%88" aria-label="二、前置条件：你需要准备什么">二、前置条件：你需要准备什么</a></li>
+                <li>
+                    <a href="#%e4%b8%89%e7%ac%ac%e4%b8%80%e6%ad%a5%e5%9c%a8-cloudflare-%e6%b7%bb%e5%8a%a0%e4%bd%a0%e7%9a%84%e5%9f%9f%e5%90%8d" aria-label="三、第一步：在 Cloudflare 添加你的域名">三、第一步：在 Cloudflare 添加你的域名</a></li>
+                <li>
+                    <a href="#%e5%9b%9b%e7%ac%ac%e4%ba%8c%e6%ad%a5%e5%9c%a8%e6%b3%a8%e5%86%8c%e5%95%86%e5%a4%84%e6%9b%b4%e6%8d%a2-dnsnamesilo-%e4%b8%ba%e4%be%8b" aria-label="四、第二步：在注册商处更换 DNS（NameSilo 为例）">四、第二步：在注册商处更换 DNS（NameSilo 为例）</a></li>
+                <li>
+                    <a href="#%e4%ba%94%e7%ac%ac%e4%b8%89%e6%ad%a5%e6%95%b4%e7%90%86%e5%92%8c%e9%85%8d%e7%bd%ae-dns-%e8%a7%a3%e6%9e%90" aria-label="五、第三步：整理和配置 DNS 解析">五、第三步：整理和配置 DNS 解析</a><ul>
+                        
+                <li>
+                    <a href="#1-%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5%e5%9b%9e%e9%a1%be" aria-label="1. 基本概念回顾">1. 基本概念回顾</a></li>
+                <li>
+                    <a href="#2-%e4%b8%ba%e6%a0%b9%e5%9f%9f%e5%90%8dmaqurentop%e9%85%8d%e7%bd%ae%e8%a7%a3%e6%9e%90" aria-label="2. 为根域名（maquren.top）配置解析">2. 为根域名（maquren.top）配置解析</a><ul>
+                        
+                <li>
+                    <a href="#%e5%9c%ba%e6%99%af-a%e6%9a%82%e6%97%b6%e6%b2%a1%e6%9c%89%e6%9c%8d%e5%8a%a1%e5%99%a8%e5%8f%aa%e6%83%b3%e5%85%88%e6%9c%89%e4%b8%80%e4%b8%aa%e5%8d%a0%e4%bd%8d%e9%a1%b5" aria-label="场景 A：暂时没有服务器，只想先有一个占位页">场景 A：暂时没有服务器，只想先有一个占位页</a></li>
+                <li>
+                    <a href="#%e5%9c%ba%e6%99%af-b%e6%9c%89%e8%87%aa%e5%b7%b1%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%99%a8%e4%be%8b%e5%a6%82%e4%b8%80%e5%8f%b0%e5%9b%bd%e5%86%85%e6%b5%b7%e5%a4%96-vps" aria-label="场景 B：有自己的服务器（例如一台国内/海外 VPS）">场景 B：有自己的服务器（例如一台国内/海外 VPS）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3-%e4%b8%ba%e5%ad%90%e5%9f%9f%e5%90%8d%e5%a6%82-wwwmaqurentop%e9%85%8d%e7%bd%ae%e8%a7%a3%e6%9e%90" aria-label="3. 为子域名（如 www.maquren.top）配置解析">3. 为子域名（如 www.maquren.top）配置解析</a></li>
+                <li>
+                    <a href="#4-%e6%a3%80%e6%9f%a5%e5%a4%9a%e4%bd%99%e8%ae%b0%e5%bd%95" aria-label="4. 检查多余记录">4. 检查多余记录</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%85%ad%e7%ac%ac%e5%9b%9b%e6%ad%a5%e9%85%8d%e7%bd%ae-ssltls%e5%bc%80%e5%90%af%e5%85%a8%e7%ab%99-https" aria-label="六、第四步：配置 SSL/TLS，开启全站 HTTPS">六、第四步：配置 SSL/TLS，开启全站 HTTPS</a><ul>
+                        
+                <li>
+                    <a href="#1-%e9%80%89%e6%8b%a9%e5%8a%a0%e5%af%86%e6%a8%a1%e5%bc%8f" aria-label="1. 选择加密模式">1. 选择加密模式</a></li>
+                <li>
+                    <a href="#2-%e5%bc%ba%e5%88%b6-http-%e8%87%aa%e5%8a%a8%e8%b7%b3%e8%bd%ac%e5%88%b0-https" aria-label="2. 强制 HTTP 自动跳转到 HTTPS">2. 强制 HTTP 自动跳转到 HTTPS</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%83%e7%ac%ac%e4%ba%94%e6%ad%a5%e9%85%8d%e7%bd%ae-cloudflare-email-routing%e5%8f%af%e9%80%89%e4%bd%86%e5%bc%ba%e7%83%88%e6%8e%a8%e8%8d%90" aria-label="七、第五步：配置 Cloudflare Email Routing（可选但强烈推荐）">七、第五步：配置 Cloudflare Email Routing（可选但强烈推荐）</a></li>
+                <li>
+                    <a href="#%e5%85%ab%e7%ac%ac%e5%85%ad%e6%ad%a5%e5%9f%ba%e7%a1%80%e6%80%a7%e8%83%bd%e4%b8%8e%e5%ae%89%e5%85%a8%e4%bc%98%e5%8c%96" aria-label="八、第六步：基础性能与安全优化">八、第六步：基础性能与安全优化</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%89%93%e5%bc%80%e5%9f%ba%e7%a1%80%e7%bc%93%e5%ad%98%e4%b8%8e%e5%8e%8b%e7%bc%a9" aria-label="1. 打开基础缓存与压缩">1. 打开基础缓存与压缩</a></li>
+                <li>
+                    <a href="#2-%e5%bc%80%e5%90%af%e5%9f%ba%e7%a1%80%e5%ae%89%e5%85%a8%e8%a7%84%e5%88%99waf" aria-label="2. 开启基础安全规则（WAF）">2. 开启基础安全规则（WAF）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b9%9d%e7%ac%ac%e4%b8%83%e6%ad%a5%e7%bb%91%e5%ae%9a-cloudflare-pages%e5%a6%82%e6%9e%9c%e4%bd%a0%e8%a6%81%e5%81%9a%e9%9d%99%e6%80%81%e5%8d%9a%e5%ae%a2%e7%bd%91%e7%ab%99" aria-label="九、第七步：绑定 Cloudflare Pages（如果你要做静态博客/网站）">九、第七步：绑定 Cloudflare Pages（如果你要做静态博客/网站）</a></li>
+                <li>
+                    <a href="#%e5%8d%81%e5%b8%b8%e8%a7%81%e9%97%ae%e9%a2%98%e4%b8%8e%e6%8e%92%e6%9f%a5%e6%80%9d%e8%b7%af" aria-label="十、常见问题与排查思路">十、常见问题与排查思路</a><ul>
+                        
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98-1%e8%ae%bf%e9%97%ae%e5%9f%9f%e5%90%8d%e6%8f%90%e7%a4%ba%e7%bd%91%e7%ab%99%e6%9c%aa%e6%89%be%e5%88%b0%e6%88%96-522525-%e9%94%99%e8%af%af" aria-label="问题 1：访问域名提示“网站未找到”或 522/525 错误？">问题 1：访问域名提示“网站未找到”或 522/525 错误？</a></li>
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98-2%e6%9b%b4%e6%8d%a2-nameserver-%e5%be%88%e4%b9%85%e8%bf%98%e6%b2%a1%e7%94%9f%e6%95%88" aria-label="问题 2：更换 Nameserver 很久还没生效？">问题 2：更换 Nameserver 很久还没生效？</a></li>
+                <li>
+                    <a href="#%e9%97%ae%e9%a2%98-3%e8%87%aa%e5%ae%9a%e4%b9%89%e9%82%ae%e7%ae%b1%e6%94%b6%e4%b8%8d%e5%88%b0%e9%82%ae%e4%bb%b6" aria-label="问题 3：自定义邮箱收不到邮件？">问题 3：自定义邮箱收不到邮件？</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%8d%81%e4%b8%80%e6%80%bb%e7%bb%93%e7%99%bd%e5%ab%96-cloudflare-%e7%9a%84%e6%9c%80%e4%bd%b3%e5%a7%bf%e5%8a%bf" aria-label="十一、总结：白嫖 Cloudflare 的最佳姿势">十一、总结：白嫖 Cloudflare 的最佳姿势</a></li>
+                <li>
+                    <a href="#%e7%9b%b8%e5%85%b3%e9%98%85%e8%af%bb" aria-label="相关阅读">相关阅读</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
   <div class="post-content"><h2 id="一前言为什么一定要用-cloudflare">一、前言：为什么一定要用 Cloudflare？<a hidden class="anchor" aria-hidden="true" href="#一前言为什么一定要用-cloudflare">#</a></h2>
 <p>大多数人买完域名，只停留在“能访问就行”。<br>
 但对开发工程师/内容创作者来说，更理想的状态是：</p>

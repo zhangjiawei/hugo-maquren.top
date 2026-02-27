@@ -6,7 +6,7 @@ paginate = 10
 enableRobotsTXT = true
 
 [sitemap]
-  changefreq = 'weekly'
+  changefreq = 'daily'
   filename = 'sitemap.xml'
   priority = 0.5
 
@@ -25,6 +25,8 @@ enableRobotsTXT = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
   ShowRssButtonInSectionTermList = true
+  ShowToc = true
+  TocOpen = false
 
   # 这里以后会配置 Giscus 评论，先占位
   comments = true
@@ -53,6 +55,12 @@ enableRobotsTXT = true
     name = '关于'
     url = '/about/'
     weight = 2
+
+  [[menu.main]]
+    identifier = 'topics'
+    name = '专题'
+    url = '/topics/'
+    weight = 3
 
 [taxonomies]
   category = 'categories'

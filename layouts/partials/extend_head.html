@@ -1,0 +1,19 @@
+{{- /* FAQ structured data for pages that define front matter `faq` */ -}}
+{{- if .IsPage -}}
+  {{- $faq := .Params.faq -}}
+  {{- if and $faq (gt (len $faq) 0) -}}
+    {{- $items := slice -}}
+    {{- range $faq -}}
+      {{- $q := .q | default .question -}}
+      {{- $a := .a | default .answer -}}
+      {{- if and $q $a -}}
+        {{- $items = $items | append (dict "@type" "Question" "name" $q "acceptedAnswer" (dict "@type" "Answer" "text" $a)) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if gt (len $items) 0 -}}
+<script type="application/ld+json">
+{{ dict "@context" "https://schema.org" "@type" "FAQPage" "mainEntity" $items | jsonify | safeJS }}
+</script>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

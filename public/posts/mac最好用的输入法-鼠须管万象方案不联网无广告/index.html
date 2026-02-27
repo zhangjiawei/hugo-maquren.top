@@ -33,6 +33,8 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
+</script><script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"常规输入与词库调用可在本地完成，不依赖云账号和广告服务，配置文件也可自行审计。"},"name":"鼠须管 + 万象拼音真的不联网吗？"},{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"多由方案键位冲突或自定义配置覆盖引起，检查 default.custom.yaml 与 wanxiang.custom.yaml 的按键配置即可。"},"name":"数字键不能选词一般是什么原因？"}]}
 </script>
 
 <meta property="og:url" content="https://maquren.top/posts/mac%E6%9C%80%E5%A5%BD%E7%94%A8%E7%9A%84%E8%BE%93%E5%85%A5%E6%B3%95-%E9%BC%A0%E9%A1%BB%E7%AE%A1%E4%B8%87%E8%B1%A1%E6%96%B9%E6%A1%88%E4%B8%8D%E8%81%94%E7%BD%91%E6%97%A0%E5%B9%BF%E5%91%8A/">
@@ -150,6 +152,11 @@
                     <span>关于</span>
                 </a>
             </li>
+            <li>
+                <a href="https://maquren.top/topics/" title="专题">
+                    <span>专题</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -167,7 +174,57 @@
     <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span>
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%89%8d%e8%a8%80" aria-label="前言">前言</a></li>
+                <li>
+                    <a href="#%e4%b8%80%e4%b8%ba%e4%bb%80%e4%b9%88%e9%80%89%e9%bc%a0%e9%a1%bb%e7%ae%a1--%e4%b8%87%e8%b1%a1%e6%8b%bc%e9%9f%b3" aria-label="一、为什么选「鼠须管 &#43; 万象拼音」？">一、为什么选「鼠须管 + 万象拼音」？</a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%ae%89%e8%a3%85%e4%b8%8e%e5%88%9d%e6%ac%a1%e9%85%8d%e7%bd%ae" aria-label="二、安装与初次配置">二、安装与初次配置</a><ul>
+                        
+                <li>
+                    <a href="#21-%e5%ae%89%e8%a3%85%e9%bc%a0%e9%a1%bb%e7%ae%a1" aria-label="2.1 安装鼠须管">2.1 安装鼠须管</a></li>
+                <li>
+                    <a href="#22-%e5%ae%89%e8%a3%85%e4%b8%87%e8%b1%a1%e6%8b%bc%e9%9f%b3%e6%96%b9%e6%a1%88" aria-label="2.2 安装万象拼音方案">2.2 安装万象拼音方案</a></li>
+                <li>
+                    <a href="#23-%e9%85%8d%e7%bd%ae%e5%8f%aa%e7%94%a8%e4%b8%87%e8%b1%a1%e9%81%bf%e5%85%8d%e6%97%a0%e5%80%99%e9%80%89%e6%a1%86" aria-label="2.3 配置「只用万象」、避免无候选框">2.3 配置「只用万象」、避免无候选框</a></li>
+                <li>
+                    <a href="#24-%e5%85%b3%e9%97%ad%e6%8c%89%e5%ba%94%e7%94%a8%e5%bc%ba%e5%88%b6%e8%8b%b1%e6%96%87%e9%81%bf%e5%85%8d%e8%af%af%e4%bb%a5%e4%b8%ba%e4%b8%8d%e8%83%bd%e6%89%93%e4%b8%ad%e6%96%87" aria-label="2.4 关闭「按应用强制英文」（避免误以为不能打中文）">2.4 关闭「按应用强制英文」（避免误以为不能打中文）</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e4%b8%87%e8%b1%a1%e6%8b%bc%e9%9f%b3%e5%b8%b8%e7%94%a8%e5%8a%9f%e8%83%bd%e4%b8%8d%e8%81%94%e7%bd%91%e6%9c%ac%e5%9c%b0%e5%ae%8c%e6%88%90" aria-label="三、万象拼音常用功能（不联网、本地完成）">三、万象拼音常用功能（不联网、本地完成）</a><ul>
+                        
+                <li>
+                    <a href="#31-%e6%95%b0%e5%ad%97%e9%94%ae%e9%80%89%e8%af%8d" aria-label="3.1 数字键选词">3.1 数字键选词</a></li>
+                <li>
+                    <a href="#32-%e4%b8%ad%e8%8b%b1%e7%bf%bb%e8%af%91%e8%be%93%e5%85%a5%e6%97%b6%e7%9c%8b%e9%87%8a%e4%b9%89" aria-label="3.2 中英翻译（输入时看释义）">3.2 中英翻译（输入时看释义）</a></li>
+                <li>
+                    <a href="#33-%e4%bb%a5%e8%af%8d%e5%ae%9a%e5%ad%97" aria-label="3.3 以词定字">3.3 以词定字</a></li>
+                <li>
+                    <a href="#34-%e5%8a%a8%e6%80%81%e5%86%85%e5%ae%b9lua" aria-label="3.4 动态内容（Lua）">3.4 动态内容（Lua）</a></li>
+                <li>
+                    <a href="#35-%e7%ac%a6%e5%8f%b7%e4%b8%8e%e7%9f%ad%e8%af%ad" aria-label="3.5 符号与短语">3.5 符号与短语</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9b%9b%e6%8e%a8%e8%8d%90%e5%a4%96%e8%a7%82%e4%b8%8e%e5%bf%ab%e6%8d%b7%e9%94%ae%e5%8f%af%e9%80%89" aria-label="四、推荐外观与快捷键（可选）">四、推荐外观与快捷键（可选）</a></li>
+                <li>
+                    <a href="#%e4%ba%94%e4%bf%9d%e6%8c%81%e6%9b%b4%e6%96%b0%e4%b8%8e%e6%97%a5%e5%b8%b8%e7%bb%b4%e6%8a%a4" aria-label="五、保持更新与日常维护">五、保持更新与日常维护</a></li>
+                <li>
+                    <a href="#%e5%85%ad%e8%bf%81%e7%a7%bb%e5%88%b0%e6%96%b0-mac-%e6%88%96-windows" aria-label="六、迁移到新 Mac 或 Windows">六、迁移到新 Mac 或 Windows</a></li>
+                <li>
+                    <a href="#%e5%b0%8f%e7%bb%93" aria-label="小结">小结</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
   <div class="post-content"><h2 id="前言">前言<a hidden class="anchor" aria-hidden="true" href="#前言">#</a></h2>
 <p>在 Mac 上想找一款<strong>不联网、无广告、可高度自定义</strong>的中文输入法，很多人会选 <strong>RIME</strong> 系。<br>
 其中 <strong>鼠须管（Squirrel）</strong> 是 macOS 上的 RIME 前端，搭配 <strong>万象拼音</strong> 方案，可以做到：</p>
