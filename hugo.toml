@@ -81,12 +81,6 @@ enableRobotsTXT = true
     url = '/topics/'
     weight = 3
 
-  [[menu.main]]
-    identifier = 'seo'
-    name = '收录监控'
-    url = '/seo/'
-    weight = 4
-
 [taxonomies]
   category = 'categories'
   tag = 'tags'
