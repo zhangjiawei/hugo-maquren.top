@@ -13,6 +13,20 @@ enableRobotsTXT = true
 [outputs]
   home = ['HTML', 'RSS', 'JSON']
 
+[related]
+  includeNewer = true
+  threshold = 80
+  toLower = false
+  [[related.indices]]
+    name = 'tags'
+    weight = 90
+  [[related.indices]]
+    name = 'categories'
+    weight = 80
+  [[related.indices]]
+    name = 'keywords'
+    weight = 70
+
 [params]
   env = 'production'
   description = 'maquren(码趣人) 技术博客，聚焦 AI 编程、开发环境搭建、OpenWrt 路由改造、Cloudflare 免费建站等实战教程。'
@@ -43,6 +57,11 @@ enableRobotsTXT = true
     theme = 'github-dark'
     crossorigin = 'anonymous'
 
+  [params.webmaster]
+    google = ''
+    bing = ''
+    baidu = ''
+
 [menu]
   [[menu.main]]
     identifier = 'posts'
@@ -61,6 +80,12 @@ enableRobotsTXT = true
     name = '专题'
     url = '/topics/'
     weight = 3
+
+  [[menu.main]]
+    identifier = 'seo'
+    name = '收录监控'
+    url = '/seo/'
+    weight = 4
 
 [taxonomies]
   category = 'categories'

@@ -1,4 +1,14 @@
 {{- /* FAQ structured data for pages that define front matter `faq` */ -}}
+{{- with site.Params.webmaster.google }}
+<meta name="google-site-verification" content="{{ . }}">
+{{- end }}
+{{- with site.Params.webmaster.bing }}
+<meta name="msvalidate.01" content="{{ . }}">
+{{- end }}
+{{- with site.Params.webmaster.baidu }}
+<meta name="baidu-site-verification" content="{{ . }}">
+{{- end }}
+
 {{- if .IsPage -}}
   {{- $faq := .Params.faq -}}
   {{- if and $faq (gt (len $faq) 0) -}}

@@ -1,4 +1,17 @@
 {{- /* Comments renderer (Utterances) */ -}}
+{{- $related := .Site.RegularPages.Related . | first 3 -}}
+{{- if gt (len $related) 0 -}}
+<div class="comments-separator"></div>
+<section class="post-related">
+  <h3>相关文章</h3>
+  <ul>
+    {{- range $related -}}
+    <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{- end -}}
+  </ul>
+</section>
+{{- end -}}
+
 {{- $utterances := site.Params.utterances -}}
 {{- if and $utterances $utterances.enabled $utterances.repo -}}
 <div class="comments-separator"></div>

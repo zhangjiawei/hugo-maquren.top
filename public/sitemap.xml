@@ -178,5 +178,9 @@
     <loc>https://maquren.top/about/</loc>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
+  </url><url>
+    <loc>https://maquren.top/seo/</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>
