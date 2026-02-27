@@ -3,6 +3,10 @@ title: "专题导航"
 description: "按主题快速浏览 maquren.top 的实战教程：建站、路由改造、输入法优化与 AI 编程。"
 ---
 
+## 新手必读（先看这篇）
+
+- [站长平台提交 SOP：Google / Bing / 百度 一次性配置与周月维护](/posts/webmaster-platform-sop/)
+
 ## 专题目录
 
 - [建站实战（域名 + Cloudflare + Hugo）](/categories/建站实战/)

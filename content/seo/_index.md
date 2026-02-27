@@ -3,6 +3,10 @@ title: "收录与监控"
 description: "maquren.top 的 SEO 数据闭环清单：验证站点、提交 sitemap、跟踪收录与查询词、按周期更新。"
 ---
 
+## 推荐先读
+
+- [站长平台提交 SOP：Google / Bing / 百度 一次性配置与周月维护](/posts/webmaster-platform-sop/)
+
 ## 一次性配置
 
 - Google Search Console：添加 `https://maquren.top`，提交 `/sitemap.xml`

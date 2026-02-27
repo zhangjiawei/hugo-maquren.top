@@ -9,4 +9,10 @@ comments: true
 
 有趣的工程师，热爱编码，记录数码&技术,记录学习，成长～
 
+## 推荐入口
+
+- [专题导航](/topics/)
+- [收录与监控](/seo/)
+- [站长平台提交 SOP（Google/Bing/百度）](/posts/webmaster-platform-sop/)
+
 © 2025 码趣人的博客
