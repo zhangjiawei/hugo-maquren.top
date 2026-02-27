@@ -133,6 +133,24 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">站长平台提交 SOP：Google / Bing / 百度 一次性配置与周月维护
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>目标 用最少步骤完成 maquren.top 的站长平台接入，形成可重复执行的 SEO 数据闭环：
+完成 Google / Bing / 百度的站点验证 提交 sitemap.xml 建立每周、每月监控动作 一、前置检查（5 分钟） 先确认以下地址可访问：
+主站：https://maquren.top 站点地图：https://maquren.top/sitemap.xml robots：https://maquren.top/robots.txt 并确认 hugo.toml 已存在如下配置（之前已接入）：
+[params.webmaster] google = &#34;&#34; bing = &#34;&#34; baidu = &#34;&#34; 这三个字段用于放各平台的验证码。填写后重新部署，验证标签会自动输出到页面 &lt;head&gt;。
+二、Google Search Console 提交 SOP Step 1：添加资源 打开 Google Search Console（GSC） 选择 URL 前缀方式添加：https://maquren.top Step 2：获取验证码 选择 HTML 标记（meta tag） 验证方式 复制 content 值（通常是一串 token） Step 3：写入站点配置 把 token 填到：
+[params.webmaster] google = &#34;你的_google_token&#34; 推送部署后回到 GSC 点 验证。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-02-27 00:00:00 +0000 UTC'>February 27, 2026</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span></footer>
+  <a class="entry-link" aria-label="post link to 站长平台提交 SOP：Google / Bing / 百度 一次性配置与周月维护" href="https://maquren.top/posts/webmaster-platform-sop/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Mac 最好用的输入法（鼠须管 &#43; 万象输入法方案 完美）：不联网，无广告
     </h2>
   </header>

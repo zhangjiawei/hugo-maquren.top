@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Hugo on maquren(码趣人) - 有趣的编码世界</title>
-    <link>https://maquren.top/tags/hugo/</link>
-    <description>Recent content in Hugo on maquren(码趣人) - 有趣的编码世界</description>
+    <title>Google Search Console on maquren(码趣人) - 有趣的编码世界</title>
+    <link>https://maquren.top/tags/google-search-console/</link>
+    <description>Recent content in Google Search Console on maquren(码趣人) - 有趣的编码世界</description>
     <image>
       <title>maquren(码趣人) - 有趣的编码世界</title>
       <url>https://maquren.top/img/og-cover.png</url>
@@ -14,20 +14,13 @@
     <managingEditor>zhangjiawei@maquren.top (maquren)</managingEditor>
     <webMaster>zhangjiawei@maquren.top (maquren)</webMaster>
     <lastBuildDate>Fri, 27 Feb 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://maquren.top/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://maquren.top/tags/google-search-console/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>站长平台提交 SOP：Google / Bing / 百度 一次性配置与周月维护</title>
       <link>https://maquren.top/posts/webmaster-platform-sop/</link>
       <pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><author>zhangjiawei@maquren.top (maquren)</author>
       <guid>https://maquren.top/posts/webmaster-platform-sop/</guid>
       <description>maquren.top 站长平台提交标准流程：验证码配置、站点验证、sitemap 提交、索引监控与周月巡检。</description>
-    </item>
-    <item>
-      <title>域名免费网站搭建：Hugo &#43; PaperMod &#43; Cloudflare Pages &#43; Giscus 实战</title>
-      <link>https://maquren.top/posts/%E5%9F%9F%E5%90%8D%E5%85%8D%E8%B4%B9%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/</link>
-      <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate><author>zhangjiawei@maquren.top (maquren)</author>
-      <guid>https://maquren.top/posts/%E5%9F%9F%E5%90%8D%E5%85%8D%E8%B4%B9%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/</guid>
-      <description>教你用现有的 maquren.top 域名，零服务器成本，搭建一个支持评论的技术博客网站。</description>
     </item>
   </channel>
 </rss>
