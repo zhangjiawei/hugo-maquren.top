@@ -8,6 +8,8 @@
 {{- with site.Params.webmaster.baidu }}
 <meta name="baidu-site-verification" content="{{ . }}">
 {{- end }}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
 
 {{- if .IsPage -}}
   {{- $faq := .Params.faq -}}
