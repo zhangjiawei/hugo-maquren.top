@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>AI 编程必备：MCP 实现数据库访问能力（PostgreSQL / MySQL / Oracle） | maquren(码趣人) - 有趣的编码世界</title>
+<meta name="keywords" content="MCP 数据库访问, AI 调用数据库, MCP Server 教程, Postgres MCP, MySQL MCP, Oracle MCP">
+<meta name="description" content="基于 mcp-servers 目录实战，讲清如何用 MCP Server 给 AI 提供数据库访问能力，并附可复用源码（已脱敏）。">
+<meta name="author" content="map[email:zhangjiawei@maquren.top name:maquren]">
+<link rel="canonical" href="https://maquren.top/posts/mcp-database-access/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://maquren.top/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://maquren.top/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://maquren.top/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://maquren.top/apple-touch-icon.png">
+<link rel="mask-icon" href="https://maquren.top/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://maquren.top/posts/mcp-database-access/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml"><script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"优先保证只读能力，限制 SQL 类型并对连接信息做脱敏与权限隔离，避免写操作和敏感数据泄露。"},"name":"MCP 访问数据库时最重要的安全点是什么？"},{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"可以，常见做法是按数据库类型拆分 server 文件并统一暴露 query 工具接口。"},"name":"一个 MCP Server 可以同时支持多种数据库吗？"}]}
+</script>
+
+<meta property="og:url" content="https://maquren.top/posts/mcp-database-access/">
+  <meta property="og:site_name" content="maquren(码趣人) - 有趣的编码世界">
+  <meta property="og:title" content="AI 编程必备：MCP 实现数据库访问能力（PostgreSQL / MySQL / Oracle）">
+  <meta property="og:description" content="基于 mcp-servers 目录实战，讲清如何用 MCP Server 给 AI 提供数据库访问能力，并附可复用源码（已脱敏）。">
+  <meta property="og:locale" content="zh-cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-27T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-27T00:00:00+00:00">
+    <meta property="article:tag" content="MCP">
+    <meta property="article:tag" content="数据库">
+    <meta property="article:tag" content="PostgreSQL">
+    <meta property="article:tag" content="MySQL">
+    <meta property="article:tag" content="Oracle">
+    <meta property="article:tag" content="Node.js">
+      <meta property="og:image" content="https://maquren.top/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://maquren.top/img/og-cover.png">
+<meta name="twitter:title" content="AI 编程必备：MCP 实现数据库访问能力（PostgreSQL / MySQL / Oracle）">
+<meta name="twitter:description" content="基于 mcp-servers 目录实战，讲清如何用 MCP Server 给 AI 提供数据库访问能力，并附可复用源码（已脱敏）。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://maquren.top/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "AI 编程必备：MCP 实现数据库访问能力（PostgreSQL / MySQL / Oracle）",
+      "item": "https://maquren.top/posts/mcp-database-access/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AI 编程必备：MCP 实现数据库访问能力（PostgreSQL / MySQL / Oracle）",
+  "name": "AI 编程必备：MCP 实现数据库访问能力（PostgreSQL \/ MySQL \/ Oracle）",
+  "description": "基于 mcp-servers 目录实战，讲清如何用 MCP Server 给 AI 提供数据库访问能力，并附可复用源码（已脱敏）。",
+  "keywords": [
+    "MCP 数据库访问", "AI 调用数据库", "MCP Server 教程", "Postgres MCP", "MySQL MCP", "Oracle MCP"
+  ],
+  "articleBody": "为什么 AI 编程需要 MCP + 数据库 在 AI 编程场景里，模型如果只能看代码，无法直接访问数据库，很多任务都做不完整，例如：\n快速验证线上表结构是否和 ORM 一致 让 AI 直接查询配置表、字典表做排查 在不暴露写权限的前提下完成“读库分析” MCP（Model Context Protocol）正好解决这件事：给模型一个标准化的工具层，把数据库能力以工具形式暴露出来。\n本文基于 mcp-servers 目录里的实现，提炼成一套可复用方案，并把文中所有连接串、账号等信息统一脱敏。\n先讲原理：MCP 在这件事里到底做了什么 可以把 MCP 理解成 “AI 的标准工具总线”：\n大模型：负责理解问题和决策“要不要调用工具” MCP Client（如 IDE/Agent）：负责把工具调用请求转发给 MCP Server MCP Server：真正执行能力（这里是查数据库），再把结果返回给模型 在数据库场景里，MCP 的价值不只是“能查 SQL”，而是把查询能力放进一个可治理边界中：\n能限制只读 能按工具协议定义输入输出 能审计每次调用 能把多种数据库统一成一套调用方式 MCP 规范要点（本文实现对应关系） 这篇代码里用到的主要是 MCP 的三类接口能力：\nListTools：告诉模型“我有哪些工具可用” 本文统一暴露 query 工具 CallTool：执行工具调用 执行 SQL，并返回结构化文本结果 ListResources / ReadResource：资源发现与读取 列出数据表、读取表结构（列名/类型） 为什么要同时提供 Tools + Resources？ 只有 query：模型能查，但容易“盲查” 加上 ListResources/ReadResource：模型可先理解表结构再查询，成功率明显更高 这也是“数据库 MCP”实战里很关键的一点：\n先让模型看 schema，再让模型写 SQL。\n实战规范：写数据库 MCP Server 的 8 条约束 结合本文代码，建议固定以下规则：\n只读 SQL 白名单：只允许 SELECT/WITH/SHOW/EXPLAIN... 连接串脱敏：对外暴露资源 URI 时清空密码 最小权限账号：MCP 独立只读账号，不复用 DBA 账号 事务保护（可选）：如 Postgres 用 BEGIN READ ONLY + ROLLBACK 统一错误语义：非法 SQL、参数缺失、URI 非法都要明确报错 统一输出格式：尽量 JSON 文本，便于模型稳定解析 资源命名稳定：schema 路径约定固定，减少模型混淆 可观测性：记录调用日志（至少 SQL 摘要 + 耗时 + 调用来源） 如果只记一条：\nMCP 不是数据库直连脚本，它是“可控的能力接口层”。\n目录里有什么 mcp-servers 的核心文件非常清晰：\npostgres-mcp-server.mjs mysql-mcp-server.mjs oracle-mcp-server.mjs package.json（依赖：@modelcontextprotocol/sdk、pg、mysql2、oracledb） 整体设计统一：\n每个数据库都暴露相同的 3 类能力\nListResources：列出表资源 ReadResource：读取某个表结构 query 工具：执行只读 SQL 通用架构（可直接复用） 核心流程是：\n启动 Server + StdioServerTransport 读取 CLI 参数中的数据库连接 URL（例如 postgresql://...） 建立连接池 注册 ListResources / ReadResource / CallTool(query) 在 query 里做只读 SQL 限制（SELECT/WITH/SHOW/EXPLAIN...） 这套结构最大的好处是：\n换数据库只改驱动和元数据查询 SQL，MCP 接口保持一致。\n源码示例 1：PostgreSQL MCP Server（脱敏版） #!/usr/bin/env node import { Server } from \"@modelcontextprotocol/sdk/server/index.js\"; import { StdioServerTransport } from \"@modelcontextprotocol/sdk/server/stdio.js\"; import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema, } from \"@modelcontextprotocol/sdk/types.js\"; import pg from \"pg\"; const { Pool } = pg; const server = new Server( { name: \"example-servers/postgres\", version: \"0.1.0\" }, { capabilities: { resources: {}, tools: {} } } ); const databaseUrl = process.argv[2]; // 例: postgresql://:@:5432/ if (!databaseUrl) process.exit(1); const pool = new Pool({ connectionString: databaseUrl }); const SCHEMA_PATH = \"schema\"; server.setRequestHandler(ListResourcesRequestSchema, async () =\u003e { const client = await pool.connect(); try { const result = await client.query( \"SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog','information_schema','pg_toast') AND table_type='BASE TABLE' ORDER BY table_schema, table_name\" ); const resourceBaseUrl = new URL(databaseUrl); resourceBaseUrl.protocol = \"postgres:\"; resourceBaseUrl.password = \"\"; // 脱敏 return { resources: result.rows.map((row) =\u003e ({ uri: new URL(`${row.table_schema}.${row.table_name}/${SCHEMA_PATH}`, resourceBaseUrl).href, mimeType: \"application/json\", name: `\"${row.table_schema}\".\"${row.table_name}\" schema`, })), }; } finally { client.release(); } }); server.setRequestHandler(ReadResourceRequestSchema, async (request) =\u003e { const u = new URL(request.params.uri); const parts = u.pathname.split(\"/\"); const schema = parts.pop(); const fullTable = parts.pop(); if (schema !== SCHEMA_PATH || !fullTable) throw new Error(\"Invalid resource URI\"); const [tableSchema, tableName] = fullTable.includes(\".\") ? fullTable.split(\".\") : [\"public\", fullTable]; const client = await pool.connect(); try { const result = await client.query( \"SELECT column_name, data_type FROM information_schema.columns WHERE table_schema=$1 AND table_name=$2 ORDER BY ordinal_position\", [tableSchema, tableName] ); return { contents: [{ uri: request.params.uri, mimeType: \"application/json\", text: JSON.stringify(result.rows, null, 2) }], }; } finally { client.release(); } }); server.setRequestHandler(ListToolsRequestSchema, async () =\u003e ({ tools: [ { name: \"query\", description: \"Run a read-only SQL query against PostgreSQL\", inputSchema: { type: \"object\", properties: { sql: { type: \"string\" } }, required: [\"sql\"] }, }, ], })); server.setRequestHandler(CallToolRequestSchema, async (request) =\u003e { if (request.params.name !== \"query\") throw new Error(\"Unknown tool\"); const sql = request.params.arguments?.sql; const normalized = (sql || \"\").trim().toLowerCase(); if (!(normalized.startsWith(\"select\") || normalized.startsWith(\"with\") || normalized.startsWith(\"show\") || normalized.startsWith(\"explain\"))) { throw new Error(\"Only read-only SQL is allowed\"); } const client = await pool.connect(); try { await client.query(\"BEGIN TRANSACTION READ ONLY\"); const result = await client.query(sql); return { content: [{ type: \"text\", text: JSON.stringify(result.rows, null, 2) }], isError: false }; } finally { await client.query(\"ROLLBACK\").catch(() =\u003e {}); client.release(); } }); await server.connect(new StdioServerTransport()); 源码示例 2：MySQL MCP Server（脱敏版） #!/usr/bin/env node import { Server } from \"@modelcontextprotocol/sdk/server/index.js\"; import { StdioServerTransport } from \"@modelcontextprotocol/sdk/server/stdio.js\"; import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema, } from \"@modelcontextprotocol/sdk/types.js\"; import mysql from \"mysql2/promise\"; const server = new Server( { name: \"example-servers/mysql\", version: \"0.1.0\" }, { capabilities: { resources: {}, tools: {} } } ); const databaseUrl = process.argv[2]; // 例: mysql://:@:3306/ if (!databaseUrl) process.exit(1); const pool = mysql.createPool(databaseUrl); const SCHEMA_PATH = \"schema\"; server.setRequestHandler(ListResourcesRequestSchema, async () =\u003e { const conn = await pool.getConnection(); try { const [rows] = await conn.query( \"SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE()\" ); const base = new URL(databaseUrl); base.password = \"\"; // 脱敏 return { resources: rows.map((row) =\u003e ({ uri: new URL(`${row.TABLE_NAME}/${SCHEMA_PATH}`, base).href, mimeType: \"application/json\", name: `\"${row.TABLE_NAME}\" database schema`, })), }; } finally { conn.release(); } }); server.setRequestHandler(ReadResourceRequestSchema, async (request) =\u003e { const u = new URL(request.params.uri); const parts = u.pathname.split(\"/\"); const schema = parts.pop(); const tableName = parts.pop(); if (schema !== SCHEMA_PATH) throw new Error(\"Invalid resource URI\"); const conn = await pool.getConnection(); try { const [rows] = await conn.query( \"SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ?\", [tableName] ); return { contents: [{ uri: request.params.uri, mimeType: \"application/json\", text: JSON.stringify(rows, null, 2) }], }; } finally { conn.release(); } }); server.setRequestHandler(ListToolsRequestSchema, async () =\u003e ({ tools: [ { name: \"query\", description: \"Run a read-only SQL query against MySQL\", inputSchema: { type: \"object\", properties: { sql: { type: \"string\" } }, required: [\"sql\"] }, }, ], })); server.setRequestHandler(CallToolRequestSchema, async (request) =\u003e { if (request.params.name !== \"query\") throw new Error(\"Unknown tool\"); const sql = request.params.arguments?.sql; const normalized = (sql || \"\").trim().toLowerCase(); if (!(normalized.startsWith(\"select\") || normalized.startsWith(\"show\") || normalized.startsWith(\"describe\") || normalized.startsWith(\"explain\"))) { throw new Error(\"Only read-only SQL is allowed\"); } const conn = await pool.getConnection(); try { const [rows] = await conn.query(sql); return { content: [{ type: \"text\", text: JSON.stringify(rows, null, 2) }], isError: false }; } finally { conn.release(); } }); await server.connect(new StdioServerTransport()); 源码示例 3：Oracle MCP Server（脱敏版） #!/usr/bin/env node import { Server } from \"@modelcontextprotocol/sdk/server/index.js\"; import { StdioServerTransport } from \"@modelcontextprotocol/sdk/server/stdio.js\"; import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema, } from \"@modelcontextprotocol/sdk/types.js\"; const oracledbModule = await import(\"oracledb\"); const oracledb = oracledbModule.default ?? oracledbModule; // 可选：ORACLE_CLIENT_LIB_DIR=/path/to/instantclient oracledb.initOracleClient( process.env.ORACLE_CLIENT_LIB_DIR ? { libDir: process.env.ORACLE_CLIENT_LIB_DIR } : undefined ); const server = new Server( { name: \"example-servers/oracle\", version: \"0.1.0\" }, { capabilities: { resources: {}, tools: {} } } ); const databaseUrl = process.argv[2]; // 例: oracle://:@:1521/ if (!databaseUrl) process.exit(1); const url = new URL(databaseUrl); const user = decodeURIComponent(url.username || \"\"); const password = decodeURIComponent(url.password || \"\"); const host = url.hostname; const port = url.port || \"1521\"; const serviceName = url.pathname.replace(/^\\//, \"\"); const connectString = `${host}:${port}/${serviceName}`; const pool = await oracledb.createPool({ user, password, connectString }); const SCHEMA_PATH = \"schema\"; server.setRequestHandler(ListResourcesRequestSchema, async () =\u003e { const conn = await pool.getConnection(); try { const result = await conn.execute(\"SELECT table_name FROM user_tables ORDER BY table_name\"); const base = new URL(databaseUrl); base.password = \"\"; // 脱敏 return { resources: result.rows.map((row) =\u003e ({ uri: new URL(`${(row.TABLE_NAME || row[0])}/${SCHEMA_PATH}`, base).href, mimeType: \"application/json\", name: `\"${row.TABLE_NAME || row[0]}\" database schema`, })), }; } finally { await conn.close(); } }); server.setRequestHandler(ReadResourceRequestSchema, async (request) =\u003e { const u = new URL(request.params.uri); const parts = u.pathname.split(\"/\"); const schema = parts.pop(); const tableName = parts.pop(); if (schema !== SCHEMA_PATH) throw new Error(\"Invalid resource URI\"); const conn = await pool.getConnection(); try { const result = await conn.execute( \"SELECT column_name, data_type FROM user_tab_columns WHERE table_name = :table\", { table: tableName.toUpperCase() } ); const rows = (result.rows || []).map((row) =\u003e ({ column_name: row.COLUMN_NAME || row[0], data_type: row.DATA_TYPE || row[1], })); return { contents: [{ uri: request.params.uri, mimeType: \"application/json\", text: JSON.stringify(rows, null, 2) }], }; } finally { await conn.close(); } }); server.setRequestHandler(ListToolsRequestSchema, async () =\u003e ({ tools: [ { name: \"query\", description: \"Run a read-only SQL query against Oracle\", inputSchema: { type: \"object\", properties: { sql: { type: \"string\" } }, required: [\"sql\"] }, }, ], })); server.setRequestHandler(CallToolRequestSchema, async (request) =\u003e { if (request.params.name !== \"query\") throw new Error(\"Unknown tool\"); const sql = request.params.arguments?.sql; const normalized = (sql || \"\").trim().toLowerCase(); if (!(normalized.startsWith(\"select\") || normalized.startsWith(\"with\"))) { throw new Error(\"Only read-only SQL is allowed\"); } const conn = await pool.getConnection(); try { const result = await conn.execute(sql); return { content: [{ type: \"text\", text: JSON.stringify(result.rows ?? [], null, 2) }], isError: false, }; } finally { await conn.close(); } }); await server.connect(new StdioServerTransport()); 本地运行方式（脱敏示例） 以下示例均使用占位符，请替换成你自己的安全配置；不要把真实密码提交到仓库。\n# PostgreSQL node mcp-servers/postgres-mcp-server.mjs \"postgresql://:@:5432/\" # MySQL node mcp-servers/mysql-mcp-server.mjs \"mysql://:@:3306/\" # Oracle node mcp-servers/oracle-mcp-server.mjs \"oracle://:@:1521/\" 安全建议（强烈推荐） 只读优先：query 严格限制为只读 SQL 前缀 账号最小权限：给 MCP 单独只读账户 连接信息不入库：使用环境变量或密钥管理，不把明文写进仓库 审计日志：记录 AI 发起的 SQL（用于回溯） 表级白名单：高敏表（如账号、财务）默认不暴露资源 小结 mcp-servers 这套实现最有价值的点，不是“能查数据库”，而是把数据库能力变成了统一、可控、可审计的 MCP 工具层。\n对 AI 编程来说，这一步就是从“只会写代码”升级为“能理解真实数据结构并辅助排障”。\n如果你已经有多种数据库环境，建议直接按本文模式统一抽象成：\n标准化 ListResources / ReadResource / query 统一只读策略 统一脱敏和日志规范 这样后续不管接入哪个 AI Agent，数据库访问能力都能快速复用。\n相关阅读 小米路由器实现科学上网 站长平台提交 SOP：Google / Bing / 百度 ",
+  "wordCount" : "1296",
+  "inLanguage": "en",
+  "image": "https://maquren.top/img/og-cover.png","datePublished": "2026-02-27T00:00:00Z",
+  "dateModified": "2026-02-27T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": {"email":"zhangjiawei@maquren.top","name":"maquren"}
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://maquren.top/posts/mcp-database-access/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "maquren(码趣人) - 有趣的编码世界",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://maquren.top/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://maquren.top/" accesskey="h" title="maquren(码趣人) - 有趣的编码世界 (Alt + H)">maquren(码趣人) - 有趣的编码世界</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://maquren.top/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://maquren.top/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://maquren.top/topics/" title="专题">
+                    <span>专题</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://maquren.top/">Home</a>&nbsp;»&nbsp;<a href="https://maquren.top/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      AI 编程必备：MCP 实现数据库访问能力（PostgreSQL / MySQL / Oracle）
+    </h1>
+    <div class="post-description">
+      基于 mcp-servers 目录实战，讲清如何用 MCP Server 给 AI 提供数据库访问能力，并附可复用源码（已脱敏）。
+    </div>
+    <div class="post-meta"><span title='2026-02-27 00:00:00 +0000 UTC'>February 27, 2026</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>map[email:zhangjiawei@maquren.top name:maquren]</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88-ai-%e7%bc%96%e7%a8%8b%e9%9c%80%e8%a6%81-mcp--%e6%95%b0%e6%8d%ae%e5%ba%93" aria-label="为什么 AI 编程需要 MCP &#43; 数据库">为什么 AI 编程需要 MCP + 数据库</a></li>
+                <li>
+                    <a href="#%e5%85%88%e8%ae%b2%e5%8e%9f%e7%90%86mcp-%e5%9c%a8%e8%bf%99%e4%bb%b6%e4%ba%8b%e9%87%8c%e5%88%b0%e5%ba%95%e5%81%9a%e4%ba%86%e4%bb%80%e4%b9%88" aria-label="先讲原理：MCP 在这件事里到底做了什么">先讲原理：MCP 在这件事里到底做了什么</a></li>
+                <li>
+                    <a href="#mcp-%e8%a7%84%e8%8c%83%e8%a6%81%e7%82%b9%e6%9c%ac%e6%96%87%e5%ae%9e%e7%8e%b0%e5%af%b9%e5%ba%94%e5%85%b3%e7%b3%bb" aria-label="MCP 规范要点（本文实现对应关系）">MCP 规范要点（本文实现对应关系）</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e5%90%8c%e6%97%b6%e6%8f%90%e4%be%9b-tools--resources" aria-label="为什么要同时提供 Tools &#43; Resources？">为什么要同时提供 Tools + Resources？</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%ae%9e%e6%88%98%e8%a7%84%e8%8c%83%e5%86%99%e6%95%b0%e6%8d%ae%e5%ba%93-mcp-server-%e7%9a%84-8-%e6%9d%a1%e7%ba%a6%e6%9d%9f" aria-label="实战规范：写数据库 MCP Server 的 8 条约束">实战规范：写数据库 MCP Server 的 8 条约束</a></li>
+                <li>
+                    <a href="#%e7%9b%ae%e5%bd%95%e9%87%8c%e6%9c%89%e4%bb%80%e4%b9%88" aria-label="目录里有什么">目录里有什么</a></li>
+                <li>
+                    <a href="#%e9%80%9a%e7%94%a8%e6%9e%b6%e6%9e%84%e5%8f%af%e7%9b%b4%e6%8e%a5%e5%a4%8d%e7%94%a8" aria-label="通用架构（可直接复用）">通用架构（可直接复用）</a></li>
+                <li>
+                    <a href="#%e6%ba%90%e7%a0%81%e7%a4%ba%e4%be%8b-1postgresql-mcp-server%e8%84%b1%e6%95%8f%e7%89%88" aria-label="源码示例 1：PostgreSQL MCP Server（脱敏版）">源码示例 1：PostgreSQL MCP Server（脱敏版）</a></li>
+                <li>
+                    <a href="#%e6%ba%90%e7%a0%81%e7%a4%ba%e4%be%8b-2mysql-mcp-server%e8%84%b1%e6%95%8f%e7%89%88" aria-label="源码示例 2：MySQL MCP Server（脱敏版）">源码示例 2：MySQL MCP Server（脱敏版）</a></li>
+                <li>
+                    <a href="#%e6%ba%90%e7%a0%81%e7%a4%ba%e4%be%8b-3oracle-mcp-server%e8%84%b1%e6%95%8f%e7%89%88" aria-label="源码示例 3：Oracle MCP Server（脱敏版）">源码示例 3：Oracle MCP Server（脱敏版）</a></li>
+                <li>
+                    <a href="#%e6%9c%ac%e5%9c%b0%e8%bf%90%e8%a1%8c%e6%96%b9%e5%bc%8f%e8%84%b1%e6%95%8f%e7%a4%ba%e4%be%8b" aria-label="本地运行方式（脱敏示例）">本地运行方式（脱敏示例）</a></li>
+                <li>
+                    <a href="#%e5%ae%89%e5%85%a8%e5%bb%ba%e8%ae%ae%e5%bc%ba%e7%83%88%e6%8e%a8%e8%8d%90" aria-label="安全建议（强烈推荐）">安全建议（强烈推荐）</a></li>
+                <li>
+                    <a href="#%e5%b0%8f%e7%bb%93" aria-label="小结">小结</a></li>
+                <li>
+                    <a href="#%e7%9b%b8%e5%85%b3%e9%98%85%e8%af%bb" aria-label="相关阅读">相关阅读</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="为什么-ai-编程需要-mcp--数据库">为什么 AI 编程需要 MCP + 数据库<a hidden class="anchor" aria-hidden="true" href="#为什么-ai-编程需要-mcp--数据库">#</a></h2>
+<p>在 AI 编程场景里，模型如果只能看代码，无法直接访问数据库，很多任务都做不完整，例如：</p>
+<ul>
+<li>快速验证线上表结构是否和 ORM 一致</li>
+<li>让 AI 直接查询配置表、字典表做排查</li>
+<li>在不暴露写权限的前提下完成“读库分析”</li>
+</ul>
+<p>MCP（Model Context Protocol）正好解决这件事：给模型一个标准化的工具层，把数据库能力以工具形式暴露出来。</p>
+<p>本文基于 <code>mcp-servers</code> 目录里的实现，提炼成一套可复用方案，并把文中所有连接串、账号等信息统一脱敏。</p>
+<hr>
+<h2 id="先讲原理mcp-在这件事里到底做了什么">先讲原理：MCP 在这件事里到底做了什么<a hidden class="anchor" aria-hidden="true" href="#先讲原理mcp-在这件事里到底做了什么">#</a></h2>
+<p>可以把 MCP 理解成 <strong>“AI 的标准工具总线”</strong>：</p>
+<ul>
+<li><strong>大模型</strong>：负责理解问题和决策“要不要调用工具”</li>
+<li><strong>MCP Client（如 IDE/Agent）</strong>：负责把工具调用请求转发给 MCP Server</li>
+<li><strong>MCP Server</strong>：真正执行能力（这里是查数据库），再把结果返回给模型</li>
+</ul>
+<p>在数据库场景里，MCP 的价值不只是“能查 SQL”，而是把查询能力放进一个可治理边界中：</p>
+<ul>
+<li>能限制只读</li>
+<li>能按工具协议定义输入输出</li>
+<li>能审计每次调用</li>
+<li>能把多种数据库统一成一套调用方式</li>
+</ul>
+<hr>
+<h2 id="mcp-规范要点本文实现对应关系">MCP 规范要点（本文实现对应关系）<a hidden class="anchor" aria-hidden="true" href="#mcp-规范要点本文实现对应关系">#</a></h2>
+<p>这篇代码里用到的主要是 MCP 的三类接口能力：</p>
+<ol>
+<li><strong>ListTools</strong>：告诉模型“我有哪些工具可用”
+<ul>
+<li>本文统一暴露 <code>query</code> 工具</li>
+</ul>
+</li>
+<li><strong>CallTool</strong>：执行工具调用
+<ul>
+<li>执行 SQL，并返回结构化文本结果</li>
+</ul>
+</li>
+<li><strong>ListResources / ReadResource</strong>：资源发现与读取
+<ul>
+<li>列出数据表、读取表结构（列名/类型）</li>
+</ul>
+</li>
+</ol>
+<h3 id="为什么要同时提供-tools--resources">为什么要同时提供 Tools + Resources？<a hidden class="anchor" aria-hidden="true" href="#为什么要同时提供-tools--resources">#</a></h3>
+<ul>
+<li>只有 <code>query</code>：模型能查，但容易“盲查”</li>
+<li>加上 <code>ListResources/ReadResource</code>：模型可先理解表结构再查询，成功率明显更高</li>
+</ul>
+<p>这也是“数据库 MCP”实战里很关键的一点：<br>
+<strong>先让模型看 schema，再让模型写 SQL。</strong></p>
+<hr>
+<h2 id="实战规范写数据库-mcp-server-的-8-条约束">实战规范：写数据库 MCP Server 的 8 条约束<a hidden class="anchor" aria-hidden="true" href="#实战规范写数据库-mcp-server-的-8-条约束">#</a></h2>
+<p>结合本文代码，建议固定以下规则：</p>
+<ol>
+<li><strong>只读 SQL 白名单</strong>：只允许 <code>SELECT/WITH/SHOW/EXPLAIN...</code></li>
+<li><strong>连接串脱敏</strong>：对外暴露资源 URI 时清空密码</li>
+<li><strong>最小权限账号</strong>：MCP 独立只读账号，不复用 DBA 账号</li>
+<li><strong>事务保护（可选）</strong>：如 Postgres 用 <code>BEGIN READ ONLY + ROLLBACK</code></li>
+<li><strong>统一错误语义</strong>：非法 SQL、参数缺失、URI 非法都要明确报错</li>
+<li><strong>统一输出格式</strong>：尽量 JSON 文本，便于模型稳定解析</li>
+<li><strong>资源命名稳定</strong>：<code>schema</code> 路径约定固定，减少模型混淆</li>
+<li><strong>可观测性</strong>：记录调用日志（至少 SQL 摘要 + 耗时 + 调用来源）</li>
+</ol>
+<p>如果只记一条：<br>
+<strong>MCP 不是数据库直连脚本，它是“可控的能力接口层”。</strong></p>
+<hr>
+<h2 id="目录里有什么">目录里有什么<a hidden class="anchor" aria-hidden="true" href="#目录里有什么">#</a></h2>
+<p><code>mcp-servers</code> 的核心文件非常清晰：</p>
+<ul>
+<li><code>postgres-mcp-server.mjs</code></li>
+<li><code>mysql-mcp-server.mjs</code></li>
+<li><code>oracle-mcp-server.mjs</code></li>
+<li><code>package.json</code>（依赖：<code>@modelcontextprotocol/sdk</code>、<code>pg</code>、<code>mysql2</code>、<code>oracledb</code>）</li>
+</ul>
+<p>整体设计统一：<br>
+<strong>每个数据库都暴露相同的 3 类能力</strong></p>
+<ol>
+<li><code>ListResources</code>：列出表资源</li>
+<li><code>ReadResource</code>：读取某个表结构</li>
+<li><code>query</code> 工具：执行只读 SQL</li>
+</ol>
+<hr>
+<h2 id="通用架构可直接复用">通用架构（可直接复用）<a hidden class="anchor" aria-hidden="true" href="#通用架构可直接复用">#</a></h2>
+<p>核心流程是：</p>
+<ol>
+<li>启动 <code>Server</code> + <code>StdioServerTransport</code></li>
+<li>读取 CLI 参数中的数据库连接 URL（例如 <code>postgresql://...</code>）</li>
+<li>建立连接池</li>
+<li>注册 <code>ListResources</code> / <code>ReadResource</code> / <code>CallTool(query)</code></li>
+<li>在 <code>query</code> 里做只读 SQL 限制（<code>SELECT/WITH/SHOW/EXPLAIN...</code>）</li>
+</ol>
+<p>这套结构最大的好处是：<br>
+换数据库只改驱动和元数据查询 SQL，MCP 接口保持一致。</p>
+<hr>
+<h2 id="源码示例-1postgresql-mcp-server脱敏版">源码示例 1：PostgreSQL MCP Server（脱敏版）<a hidden class="anchor" aria-hidden="true" href="#源码示例-1postgresql-mcp-server脱敏版">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env node
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Server</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/server/index.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">StdioServerTransport</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/server/stdio.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">CallToolRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ListResourcesRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ListToolsRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ReadResourceRequestSchema</span>,
+</span></span><span style="display:flex;"><span>} <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/types.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">pg</span> <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;pg&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">Pool</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">pg</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">server</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Server</span>(
+</span></span><span style="display:flex;"><span>  { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;example-servers/postgres&#34;</span>, <span style="color:#a6e22e">version</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;0.1.0&#34;</span> },
+</span></span><span style="display:flex;"><span>  { <span style="color:#a6e22e">capabilities</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">resources</span><span style="color:#f92672">:</span> {}, <span style="color:#a6e22e">tools</span><span style="color:#f92672">:</span> {} } }
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">databaseUrl</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">argv</span>[<span style="color:#ae81ff">2</span>]; <span style="color:#75715e">// 例: postgresql://&lt;USER&gt;:&lt;PASS&gt;@&lt;HOST&gt;:5432/&lt;DB&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">databaseUrl</span>) <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pool</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Pool</span>({ <span style="color:#a6e22e">connectionString</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">databaseUrl</span> });
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">SCHEMA_PATH</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;schema&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ListResourcesRequestSchema</span>, <span style="color:#66d9ef">async</span> () =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">connect</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">query</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema NOT IN (&#39;pg_catalog&#39;,&#39;information_schema&#39;,&#39;pg_toast&#39;) AND table_type=&#39;BASE TABLE&#39; ORDER BY table_schema, table_name&#34;</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">resourceBaseUrl</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">databaseUrl</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">resourceBaseUrl</span>.<span style="color:#a6e22e">protocol</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;postgres:&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">resourceBaseUrl</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>; <span style="color:#75715e">// 脱敏
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">resources</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">rows</span>.<span style="color:#a6e22e">map</span>((<span style="color:#a6e22e">row</span>) =&gt; ({
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">uri</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">table_schema</span><span style="color:#e6db74">}</span><span style="color:#e6db74">.</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">table_name</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">SCHEMA_PATH</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>, <span style="color:#a6e22e">resourceBaseUrl</span>).<span style="color:#a6e22e">href</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">mimeType</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;application/json&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`&#34;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">table_schema</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;.&#34;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">table_name</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34; schema`</span>,
+</span></span><span style="display:flex;"><span>      })),
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">release</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ReadResourceRequestSchema</span>, <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">request</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">u</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">uri</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">parts</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">pathname</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;/&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">schema</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">parts</span>.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">fullTable</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">parts</span>.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">schema</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">SCHEMA_PATH</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">fullTable</span>) <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Invalid resource URI&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">tableSchema</span>, <span style="color:#a6e22e">tableName</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">fullTable</span>.<span style="color:#a6e22e">includes</span>(<span style="color:#e6db74">&#34;.&#34;</span>) <span style="color:#f92672">?</span> <span style="color:#a6e22e">fullTable</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;.&#34;</span>) <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;public&#34;</span>, <span style="color:#a6e22e">fullTable</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">connect</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">query</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;SELECT column_name, data_type FROM information_schema.columns WHERE table_schema=$1 AND table_name=$2 ORDER BY ordinal_position&#34;</span>,
+</span></span><span style="display:flex;"><span>      [<span style="color:#a6e22e">tableSchema</span>, <span style="color:#a6e22e">tableName</span>]
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">contents</span><span style="color:#f92672">:</span> [{ <span style="color:#a6e22e">uri</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">uri</span>, <span style="color:#a6e22e">mimeType</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;application/json&#34;</span>, <span style="color:#a6e22e">text</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">rows</span>, <span style="color:#66d9ef">null</span>, <span style="color:#ae81ff">2</span>) }],
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">release</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ListToolsRequestSchema</span>, <span style="color:#66d9ef">async</span> () =&gt; ({
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">tools</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;query&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Run a read-only SQL query against PostgreSQL&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">inputSchema</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;object&#34;</span>, <span style="color:#a6e22e">properties</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">sql</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span> } }, <span style="color:#a6e22e">required</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;sql&#34;</span>] },
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>}));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">CallToolRequestSchema</span>, <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">request</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;query&#34;</span>) <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Unknown tool&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sql</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">arguments</span><span style="color:#f92672">?</span>.<span style="color:#a6e22e">sql</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">normalized</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">sql</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;&#34;</span>).<span style="color:#a6e22e">trim</span>().<span style="color:#a6e22e">toLowerCase</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(<span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;select&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;with&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;show&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;explain&#34;</span>))) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Only read-only SQL is allowed&#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">connect</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">query</span>(<span style="color:#e6db74">&#34;BEGIN TRANSACTION READ ONLY&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">query</span>(<span style="color:#a6e22e">sql</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> { <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> [{ <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;text&#34;</span>, <span style="color:#a6e22e">text</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">rows</span>, <span style="color:#66d9ef">null</span>, <span style="color:#ae81ff">2</span>) }], <span style="color:#a6e22e">isError</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">query</span>(<span style="color:#e6db74">&#34;ROLLBACK&#34;</span>).<span style="color:#66d9ef">catch</span>(() =&gt; {});
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">release</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">await</span> <span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">StdioServerTransport</span>());
+</span></span></code></pre></div><hr>
+<h2 id="源码示例-2mysql-mcp-server脱敏版">源码示例 2：MySQL MCP Server（脱敏版）<a hidden class="anchor" aria-hidden="true" href="#源码示例-2mysql-mcp-server脱敏版">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env node
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Server</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/server/index.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">StdioServerTransport</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/server/stdio.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">CallToolRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ListResourcesRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ListToolsRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ReadResourceRequestSchema</span>,
+</span></span><span style="display:flex;"><span>} <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/types.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">mysql</span> <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;mysql2/promise&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">server</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Server</span>(
+</span></span><span style="display:flex;"><span>  { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;example-servers/mysql&#34;</span>, <span style="color:#a6e22e">version</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;0.1.0&#34;</span> },
+</span></span><span style="display:flex;"><span>  { <span style="color:#a6e22e">capabilities</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">resources</span><span style="color:#f92672">:</span> {}, <span style="color:#a6e22e">tools</span><span style="color:#f92672">:</span> {} } }
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">databaseUrl</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">argv</span>[<span style="color:#ae81ff">2</span>]; <span style="color:#75715e">// 例: mysql://&lt;USER&gt;:&lt;PASS&gt;@&lt;HOST&gt;:3306/&lt;DB&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">databaseUrl</span>) <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pool</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql</span>.<span style="color:#a6e22e">createPool</span>(<span style="color:#a6e22e">databaseUrl</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">SCHEMA_PATH</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;schema&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ListResourcesRequestSchema</span>, <span style="color:#66d9ef">async</span> () =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">conn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">getConnection</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">rows</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">query</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE()&#34;</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">base</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">databaseUrl</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">base</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>; <span style="color:#75715e">// 脱敏
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">resources</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">rows</span>.<span style="color:#a6e22e">map</span>((<span style="color:#a6e22e">row</span>) =&gt; ({
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">uri</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">TABLE_NAME</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">SCHEMA_PATH</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>, <span style="color:#a6e22e">base</span>).<span style="color:#a6e22e">href</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">mimeType</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;application/json&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`&#34;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">TABLE_NAME</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34; database schema`</span>,
+</span></span><span style="display:flex;"><span>      })),
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">release</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ReadResourceRequestSchema</span>, <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">request</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">u</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">uri</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">parts</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">pathname</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;/&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">schema</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">parts</span>.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">tableName</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">parts</span>.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">schema</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">SCHEMA_PATH</span>) <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Invalid resource URI&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">conn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">getConnection</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">rows</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">query</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ?&#34;</span>,
+</span></span><span style="display:flex;"><span>      [<span style="color:#a6e22e">tableName</span>]
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">contents</span><span style="color:#f92672">:</span> [{ <span style="color:#a6e22e">uri</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">uri</span>, <span style="color:#a6e22e">mimeType</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;application/json&#34;</span>, <span style="color:#a6e22e">text</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">rows</span>, <span style="color:#66d9ef">null</span>, <span style="color:#ae81ff">2</span>) }],
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">release</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ListToolsRequestSchema</span>, <span style="color:#66d9ef">async</span> () =&gt; ({
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">tools</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;query&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Run a read-only SQL query against MySQL&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">inputSchema</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;object&#34;</span>, <span style="color:#a6e22e">properties</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">sql</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span> } }, <span style="color:#a6e22e">required</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;sql&#34;</span>] },
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>}));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">CallToolRequestSchema</span>, <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">request</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;query&#34;</span>) <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Unknown tool&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sql</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">arguments</span><span style="color:#f92672">?</span>.<span style="color:#a6e22e">sql</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">normalized</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">sql</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;&#34;</span>).<span style="color:#a6e22e">trim</span>().<span style="color:#a6e22e">toLowerCase</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(<span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;select&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;show&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;describe&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;explain&#34;</span>))) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Only read-only SQL is allowed&#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">conn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">getConnection</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">rows</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">query</span>(<span style="color:#a6e22e">sql</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> { <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> [{ <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;text&#34;</span>, <span style="color:#a6e22e">text</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">rows</span>, <span style="color:#66d9ef">null</span>, <span style="color:#ae81ff">2</span>) }], <span style="color:#a6e22e">isError</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">release</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">await</span> <span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">StdioServerTransport</span>());
+</span></span></code></pre></div><hr>
+<h2 id="源码示例-3oracle-mcp-server脱敏版">源码示例 3：Oracle MCP Server（脱敏版）<a hidden class="anchor" aria-hidden="true" href="#源码示例-3oracle-mcp-server脱敏版">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env node
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Server</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/server/index.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">StdioServerTransport</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/server/stdio.js&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">CallToolRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ListResourcesRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ListToolsRequestSchema</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ReadResourceRequestSchema</span>,
+</span></span><span style="display:flex;"><span>} <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;@modelcontextprotocol/sdk/types.js&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">oracledbModule</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#66d9ef">import</span>(<span style="color:#e6db74">&#34;oracledb&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">oracledb</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">oracledbModule</span>.<span style="color:#66d9ef">default</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">oracledbModule</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 可选：ORACLE_CLIENT_LIB_DIR=/path/to/instantclient
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">oracledb</span>.<span style="color:#a6e22e">initOracleClient</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">ORACLE_CLIENT_LIB_DIR</span> <span style="color:#f92672">?</span> { <span style="color:#a6e22e">libDir</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">ORACLE_CLIENT_LIB_DIR</span> } <span style="color:#f92672">:</span> <span style="color:#66d9ef">undefined</span>
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">server</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Server</span>(
+</span></span><span style="display:flex;"><span>  { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;example-servers/oracle&#34;</span>, <span style="color:#a6e22e">version</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;0.1.0&#34;</span> },
+</span></span><span style="display:flex;"><span>  { <span style="color:#a6e22e">capabilities</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">resources</span><span style="color:#f92672">:</span> {}, <span style="color:#a6e22e">tools</span><span style="color:#f92672">:</span> {} } }
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">databaseUrl</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">argv</span>[<span style="color:#ae81ff">2</span>]; <span style="color:#75715e">// 例: oracle://&lt;USER&gt;:&lt;PASS&gt;@&lt;HOST&gt;:1521/&lt;SERVICE_NAME&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">databaseUrl</span>) <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">exit</span>(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">url</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">databaseUrl</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">user</span> <span style="color:#f92672">=</span> decodeURIComponent(<span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">username</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">password</span> <span style="color:#f92672">=</span> decodeURIComponent(<span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">host</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">hostname</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">port</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">port</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;1521&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">serviceName</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">pathname</span>.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">/^\//</span>, <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">connectString</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">host</span><span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">port</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">serviceName</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pool</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">oracledb</span>.<span style="color:#a6e22e">createPool</span>({ <span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">password</span>, <span style="color:#a6e22e">connectString</span> });
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">SCHEMA_PATH</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;schema&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ListResourcesRequestSchema</span>, <span style="color:#66d9ef">async</span> () =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">conn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">getConnection</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#e6db74">&#34;SELECT table_name FROM user_tables ORDER BY table_name&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">base</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">databaseUrl</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">base</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>; <span style="color:#75715e">// 脱敏
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">resources</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">rows</span>.<span style="color:#a6e22e">map</span>((<span style="color:#a6e22e">row</span>) =&gt; ({
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">uri</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">${</span>(<span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">TABLE_NAME</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">row</span>[<span style="color:#ae81ff">0</span>])<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">SCHEMA_PATH</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>, <span style="color:#a6e22e">base</span>).<span style="color:#a6e22e">href</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">mimeType</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;application/json&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`&#34;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">TABLE_NAME</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">row</span>[<span style="color:#ae81ff">0</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34; database schema`</span>,
+</span></span><span style="display:flex;"><span>      })),
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ReadResourceRequestSchema</span>, <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">request</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">u</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">URL</span>(<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">uri</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">parts</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">u</span>.<span style="color:#a6e22e">pathname</span>.<span style="color:#a6e22e">split</span>(<span style="color:#e6db74">&#34;/&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">schema</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">parts</span>.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">tableName</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">parts</span>.<span style="color:#a6e22e">pop</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">schema</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">SCHEMA_PATH</span>) <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Invalid resource URI&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">conn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">getConnection</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">execute</span>(
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;SELECT column_name, data_type FROM user_tab_columns WHERE table_name = :table&#34;</span>,
+</span></span><span style="display:flex;"><span>      { <span style="color:#a6e22e">table</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">tableName</span>.<span style="color:#a6e22e">toUpperCase</span>() }
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rows</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">rows</span> <span style="color:#f92672">||</span> []).<span style="color:#a6e22e">map</span>((<span style="color:#a6e22e">row</span>) =&gt; ({
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">column_name</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">COLUMN_NAME</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">row</span>[<span style="color:#ae81ff">0</span>],
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">data_type</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">row</span>.<span style="color:#a6e22e">DATA_TYPE</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">row</span>[<span style="color:#ae81ff">1</span>],
+</span></span><span style="display:flex;"><span>    }));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">contents</span><span style="color:#f92672">:</span> [{ <span style="color:#a6e22e">uri</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">uri</span>, <span style="color:#a6e22e">mimeType</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;application/json&#34;</span>, <span style="color:#a6e22e">text</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">rows</span>, <span style="color:#66d9ef">null</span>, <span style="color:#ae81ff">2</span>) }],
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">ListToolsRequestSchema</span>, <span style="color:#66d9ef">async</span> () =&gt; ({
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">tools</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;query&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Run a read-only SQL query against Oracle&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">inputSchema</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;object&#34;</span>, <span style="color:#a6e22e">properties</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">sql</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span> } }, <span style="color:#a6e22e">required</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;sql&#34;</span>] },
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>}));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">setRequestHandler</span>(<span style="color:#a6e22e">CallToolRequestSchema</span>, <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">request</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#34;query&#34;</span>) <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Unknown tool&#34;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sql</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">arguments</span><span style="color:#f92672">?</span>.<span style="color:#a6e22e">sql</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">normalized</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">sql</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;&#34;</span>).<span style="color:#a6e22e">trim</span>().<span style="color:#a6e22e">toLowerCase</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(<span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;select&#34;</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">normalized</span>.<span style="color:#a6e22e">startsWith</span>(<span style="color:#e6db74">&#34;with&#34;</span>))) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;Only read-only SQL is allowed&#34;</span>);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">conn</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">pool</span>.<span style="color:#a6e22e">getConnection</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">sql</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">content</span><span style="color:#f92672">:</span> [{ <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;text&#34;</span>, <span style="color:#a6e22e">text</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">rows</span> <span style="color:#f92672">??</span> [], <span style="color:#66d9ef">null</span>, <span style="color:#ae81ff">2</span>) }],
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">isError</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">await</span> <span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">StdioServerTransport</span>());
+</span></span></code></pre></div><hr>
+<h2 id="本地运行方式脱敏示例">本地运行方式（脱敏示例）<a hidden class="anchor" aria-hidden="true" href="#本地运行方式脱敏示例">#</a></h2>
+<blockquote>
+<p>以下示例均使用占位符，请替换成你自己的安全配置；不要把真实密码提交到仓库。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># PostgreSQL</span>
+</span></span><span style="display:flex;"><span>node mcp-servers/postgres-mcp-server.mjs <span style="color:#e6db74">&#34;postgresql://&lt;USER&gt;:&lt;PASS&gt;@&lt;HOST&gt;:5432/&lt;DB&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># MySQL</span>
+</span></span><span style="display:flex;"><span>node mcp-servers/mysql-mcp-server.mjs <span style="color:#e6db74">&#34;mysql://&lt;USER&gt;:&lt;PASS&gt;@&lt;HOST&gt;:3306/&lt;DB&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Oracle</span>
+</span></span><span style="display:flex;"><span>node mcp-servers/oracle-mcp-server.mjs <span style="color:#e6db74">&#34;oracle://&lt;USER&gt;:&lt;PASS&gt;@&lt;HOST&gt;:1521/&lt;SERVICE_NAME&gt;&#34;</span>
+</span></span></code></pre></div><hr>
+<h2 id="安全建议强烈推荐">安全建议（强烈推荐）<a hidden class="anchor" aria-hidden="true" href="#安全建议强烈推荐">#</a></h2>
+<ol>
+<li><strong>只读优先</strong>：<code>query</code> 严格限制为只读 SQL 前缀</li>
+<li><strong>账号最小权限</strong>：给 MCP 单独只读账户</li>
+<li><strong>连接信息不入库</strong>：使用环境变量或密钥管理，不把明文写进仓库</li>
+<li><strong>审计日志</strong>：记录 AI 发起的 SQL（用于回溯）</li>
+<li><strong>表级白名单</strong>：高敏表（如账号、财务）默认不暴露资源</li>
+</ol>
+<hr>
+<h2 id="小结">小结<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h2>
+<p><code>mcp-servers</code> 这套实现最有价值的点，不是“能查数据库”，而是把数据库能力变成了统一、可控、可审计的 MCP 工具层。<br>
+对 AI 编程来说，这一步就是从“只会写代码”升级为“能理解真实数据结构并辅助排障”。</p>
+<p>如果你已经有多种数据库环境，建议直接按本文模式统一抽象成：</p>
+<ul>
+<li>标准化 <code>ListResources / ReadResource / query</code></li>
+<li>统一只读策略</li>
+<li>统一脱敏和日志规范</li>
+</ul>
+<p>这样后续不管接入哪个 AI Agent，数据库访问能力都能快速复用。</p>
+<hr>
+<h2 id="相关阅读">相关阅读<a hidden class="anchor" aria-hidden="true" href="#相关阅读">#</a></h2>
+<ul>
+<li><a href="/posts/%E5%B0%8F%E7%B1%B3%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AE%9E%E7%8E%B0%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/">小米路由器实现科学上网</a></li>
+<li><a href="/posts/webmaster-platform-sop/">站长平台提交 SOP：Google / Bing / 百度</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://maquren.top/tags/mcp/">MCP</a></li>
+      <li><a href="https://maquren.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
+      <li><a href="https://maquren.top/tags/postgresql/">PostgreSQL</a></li>
+      <li><a href="https://maquren.top/tags/mysql/">MySQL</a></li>
+      <li><a href="https://maquren.top/tags/oracle/">Oracle</a></li>
+      <li><a href="https://maquren.top/tags/node.js/">Node.js</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://maquren.top/posts/webmaster-platform-sop/">
+    <span class="title">Next »</span>
+    <br>
+    <span>站长平台提交 SOP：Google / Bing / 百度 一次性配置与周月维护</span>
+  </a>
+</nav>
+
+  </footer><div class="comments-separator"></div>
+<section class="comments">
+  <script src="https://utteranc.es/client.js"
+          repo="zhangjiawei/hugo-maquren.top"
+          issue-term="pathname"
+          label="comment"
+          theme="github-dark"
+          crossorigin="anonymous"
+          async>
+  </script>
+</section>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://maquren.top/">maquren(码趣人) - 有趣的编码世界</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

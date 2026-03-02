@@ -16,6 +16,13 @@
     <lastBuildDate>Fri, 27 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://maquren.top/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>AI 编程必备：MCP 实现数据库访问能力（PostgreSQL / MySQL / Oracle）</title>
+      <link>https://maquren.top/posts/mcp-database-access/</link>
+      <pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><author>zhangjiawei@maquren.top (maquren)</author>
+      <guid>https://maquren.top/posts/mcp-database-access/</guid>
+      <description>基于 mcp-servers 目录实战，讲清如何用 MCP Server 给 AI 提供数据库访问能力，并附可复用源码（已脱敏）。</description>
+    </item>
+    <item>
       <title>站长平台提交 SOP：Google / Bing / 百度 一次性配置与周月维护</title>
       <link>https://maquren.top/posts/webmaster-platform-sop/</link>
       <pubDate>Fri, 27 Feb 2026 00:00:00 +0000</pubDate><author>zhangjiawei@maquren.top (maquren)</author>

@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://maquren.top/categories/ai-%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://maquren.top/posts/mcp-database-access/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
     <loc>https://maquren.top/tags/bing-webmaster/</loc>
     <lastmod>2026-02-27T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
@@ -27,6 +37,31 @@
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url><url>
+    <loc>https://maquren.top/tags/mcp/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://maquren.top/tags/mysql/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://maquren.top/tags/node.js/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://maquren.top/tags/oracle/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://maquren.top/tags/postgresql/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
     <loc>https://maquren.top/posts/</loc>
     <lastmod>2026-02-27T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
@@ -43,6 +78,11 @@
     <priority>0.5</priority>
   </url><url>
     <loc>https://maquren.top/categories/%E5%BB%BA%E7%AB%99%E5%AE%9E%E6%88%98/</loc>
+    <lastmod>2026-02-27T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://maquren.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
     <lastmod>2026-02-27T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
