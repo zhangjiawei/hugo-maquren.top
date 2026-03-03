@@ -35,7 +35,16 @@
 
 </script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml"><script type="application/ld+json">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?00b3f18ac52cf25157ac7a556a6c6b31";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"优先保证只读能力，限制 SQL 类型并对连接信息做脱敏与权限隔离，避免写操作和敏感数据泄露。"},"name":"MCP 访问数据库时最重要的安全点是什么？"},{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"可以，常见做法是按数据库类型拆分 server 文件并统一暴露 query 工具接口。"},"name":"一个 MCP Server 可以同时支持多种数据库吗？"}]}
 </script>
 

@@ -62,6 +62,9 @@ enableRobotsTXT = true
     bing = ''
     baidu = ''
 
+  [params.analytics]
+    baiduHmId = '00b3f18ac52cf25157ac7a556a6c6b31'
+
 [menu]
   [[menu.main]]
     identifier = 'posts'

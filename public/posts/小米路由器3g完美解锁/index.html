@@ -35,7 +35,16 @@
 
 </script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml"><script type="application/ld+json">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?00b3f18ac52cf25157ac7a556a6c6b31";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"分区备份可用于故障回滚与救砖，尤其在写入 kernel/rootfs 前能显著降低不可逆风险。"},"name":"刷机前为什么建议先备份分区？"},{"@type":"Question","acceptedAnswer":{"@type":"Answer","text":"先确认光猫是否支持 passthrough/多拨；若不支持，改用 WAN DHCP 上联并按双 NAT 方案使用。"},"name":"PPPoE 拨号失败怎么办？"}]}
 </script>
 
