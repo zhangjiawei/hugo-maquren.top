@@ -60,7 +60,7 @@ enableRobotsTXT = true
   [params.webmaster]
     google = ''
     bing = ''
-    baidu = 'codeva-hfELndI1Bo'
+    baidu = 'codeva-e9o4dA1ncm'
 
   [params.analytics]
     baiduHmId = '00b3f18ac52cf25157ac7a556a6c6b31'
